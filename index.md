@@ -5,7 +5,4 @@ description: Home Page
 hide: true
 ---
 
-My journey starts here.
-
-
-I want to test something
+# About Me
