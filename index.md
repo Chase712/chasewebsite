@@ -38,4 +38,7 @@ I was born on August 9th
 
 
 _______________________________________________________________________________
-![alt text](images/birthday-cake-decorated-with-colorful-sprinkles-and-royalty-free-image-1653509348.jpg)
+
+
+<img src="images/birthday-cake-decorated-with-colorful-sprinkles-and-royalty-free-image-1653509348.jpg" alt="Description"
+style="width:400px; height:auto;">
