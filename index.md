@@ -19,7 +19,8 @@ I have two brothers one older and one younger.
 
 _______________________________________________________________________________
 
-![alt text](images/three-happy-cartoon-boys-who-support-each-other-vector-9170265.jpg)
+<img src="images/three-happy-cartoon-boys-who-support-each-other-vector-9170265.jpg" alt="Description"
+style="width:400px; height:auto;">
 
 
 
