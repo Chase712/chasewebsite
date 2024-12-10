@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-Creator of Student 2025
+Im a Del Norte student. I was born here in San Diego. In my freetime I like to hangout with my brothers and my friends.
