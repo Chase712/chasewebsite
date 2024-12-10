@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-Im a Del Norte student. I was born here in San Diego. In my freetime I like to hangout with my brothers and my friends.
+Hello my name is Chase Sikute. Im a softmore student at Del Norte. I was born here in San Diego. In my freetime I like to hangout with my brothers and my friends.
