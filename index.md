@@ -51,8 +51,6 @@ My favorite food is tacos.
 
 _______________________________________________________________________________
 
-![alt text](images/iStock-960337396-3beef-barbacoa-tacos-e1695391119564-500x500.jpg)
-
 
 <img src="images/iStock-960337396-3beef-barbacoa-tacos-e1695391119564-500x500.jpg" alt="Description"
 style="width:400px; height:auto;">
