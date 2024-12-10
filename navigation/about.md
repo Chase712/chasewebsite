@@ -4,6 +4,9 @@ title: About
 permalink: /about/
 ---
 
+_______________________________________________________________________________
+
+
 Hello my name is Chase Sikute.
 
 Im a softmore student at Del Norte. 
