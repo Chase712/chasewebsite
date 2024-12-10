@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About
-permalink: /about/
+permalink: # /about/
 ---
 
 ____________________________________
@@ -15,6 +15,6 @@ ____________________________________
 
 # In my freetime I like to hangout
 
- # with my brothers and my friends.
+# with my brothers and my friends.
 
 
