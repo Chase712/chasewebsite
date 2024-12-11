@@ -7,7 +7,7 @@ permalink: /about/
 ____________________________________
 
 
-                                              # Hello my name is Chase Sikute.
+ # Hello my name is Chase Sikute.
 
 # Im a softmore student at Del Norte. 
 
