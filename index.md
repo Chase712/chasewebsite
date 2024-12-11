@@ -17,7 +17,7 @@ _______________________________________________________________________________
 I have two brothers one older and one younger.
 
 
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
