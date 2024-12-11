@@ -96,6 +96,7 @@ _______________________________________________________________________________
 <img src="images/iStock-960337396-3beef-barbacoa-tacos-e1695391119564-500x500.jpg" alt="Description"
 style="width:400px; height:auto;">
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,14 +105,15 @@ style="width:400px; height:auto;">
     <title>Snake Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: #ffffff;
         }
 
         #instruction-page, #game-page {
@@ -131,28 +133,40 @@ style="width:400px; height:auto;">
             color: white;
             border: none;
             border-radius: 5px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: #45a049;
         }
 
         #game-area {
             width: 400px;
             height: 400px;
-            background-color: #000;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             position: relative;
             overflow: hidden;
+            border: 5px solid #fff;
+            box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.5);
         }
 
         .snake {
             width: 20px;
             height: 20px;
-            background-color: green;
+            background-color: #32cd32;
             position: absolute;
+            border-radius: 3px;
+            box-shadow: 0 0 5px #32cd32;
         }
 
         .food {
             width: 20px;
             height: 20px;
-            background-color: red;
+            background-color: #ff4500;
             position: absolute;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #ff4500;
         }
     </style>
 </head>
@@ -160,7 +174,15 @@ style="width:400px; height:auto;">
 
 <div id="instruction-page" class="active">
     <h1>Welcome to Snake Game!</h1>
-    <p>Your goal is to eat as many red food blocks as possible without hitting the walls or yourself. Use arrow keys to control the snake.</p>
+    <p>Your goal is to eat as many glowing food orbs as possible without hitting the walls or yourself.</p>
+    <p>Use the <b>W</b>, <b>A</b>, <b>S</b>, <b>D</b> keys to move the snake:</p>
+    <ul>
+        <li><b>W:</b> Move Up</li>
+        <li><b>A:</b> Move Left</li>
+        <li><b>S:</b> Move Down</li>
+        <li><b>D:</b> Move Right</li>
+    </ul>
+    <p>Press the "Start Game" button to begin!</p>
     <button onclick="startGame()">Start Game</button>
 </div>
 
@@ -173,7 +195,7 @@ style="width:400px; height:auto;">
     let score = 0;
     let snake = [{ x: 200, y: 200 }];
     let food = { x: 0, y: 0 };
-    let direction = { x: 20, y: 0 }; // Start moving to the right by default
+    let direction = null; // No direction initially
     let gameInterval;
 
     const instructionPage = document.getElementById('instruction-page');
@@ -186,7 +208,7 @@ style="width:400px; height:auto;">
         gamePage.classList.add('active');
         score = 0;
         snake = [{ x: 200, y: 200 }];
-        direction = { x: 20, y: 0 }; // Reset direction
+        direction = null; // Reset direction
         placeFood();
         updateScore();
         drawGame();
@@ -214,7 +236,9 @@ style="width:400px; height:auto;">
     }
 
     function updateGame() {
-        const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+        if (!direction) return; // Skip update if no direction
+
+        const head = { x: snake[0].x + direction.x * 20, y: snake[0].y + direction.y * 20 };
         if (head.x < 0 || head.y < 0 || head.x >= 400 || head.y >= 400 || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
             endGame();
             return;
@@ -247,17 +271,21 @@ style="width:400px; height:auto;">
 
     document.addEventListener('keydown', e => {
         switch (e.key) {
-            case 'ArrowUp':
-                if (direction.y === 0) direction = { x: 0, y: -20 };
+            case 'w':
+            case 'W':
+                if (direction?.y !== 1) direction = { x: 0, y: -1 };
                 break;
-            case 'ArrowDown':
-                if (direction.y === 0) direction = { x: 0, y: 20 };
+            case 's':
+            case 'S':
+                if (direction?.y !== -1) direction = { x: 0, y: 1 };
                 break;
-            case 'ArrowLeft':
-                if (direction.x === 0) direction = { x: -20, y: 0 };
+            case 'a':
+            case 'A':
+                if (direction?.x !== 1) direction = { x: -1, y: 0 };
                 break;
-            case 'ArrowRight':
-                if (direction.x === 0) direction = { x: 20, y: 0 };
+            case 'd':
+            case 'D':
+                if (direction?.x !== -1) direction = { x: 1, y: 0 };
                 break;
         }
     });
