@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Fun Game
+title: About Me
 permalink: /about/
 ---
 
