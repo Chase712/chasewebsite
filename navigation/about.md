@@ -1,13 +1,13 @@
 ---
 layout: page
-title: About
+title: Fun Facts About me
 permalink: /about/
 ---
 
 ____________________________________
 
 
- # Hello my name is Chase Sikute.
+# Hello my name is Chase Sikute.
 
 # Im a softmore student at Del Norte. 
 
