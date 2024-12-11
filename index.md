@@ -5,7 +5,7 @@ description: Home Page
 hide: true
 ---
 
-# About Me
+# Some things about me
 
 
 
