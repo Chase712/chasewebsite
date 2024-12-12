@@ -106,4 +106,4 @@ _______________________________________________________________________________
 My mom is from Lithuania
 
 
-![alt text](../_site/images/logo.png)
+/chasewebsite/images/![alt text](../_site/images/logo.png)
