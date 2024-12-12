@@ -106,5 +106,5 @@ _______________________________________________________________________________
 My mom is from Lithuania
 
 
-<img src=![alt text]/chasewebsite/(../_site/images/Flag_of_Lithuania.svg) alt="Description"
+<img src=/chasewebsite/(../_site/images/Flag_of_Lithuania.svg) alt="Description"
 style="width:400px; height:auto;">
