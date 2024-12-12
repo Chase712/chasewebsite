@@ -106,4 +106,6 @@ _______________________________________________________________________________
 My mom is from Lithuania
 
 
-![alt text](../_site/images/lithuania-flag-with-waving-effect-official-proportion-vector.jpg)
+<img src="/chasewebsite/images/lithuania-flag-with-waving-effect-official-proportion-vector.jpg" alt="Description"
+style="width:400px; height:auto;">
+
