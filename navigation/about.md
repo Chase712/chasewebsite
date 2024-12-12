@@ -32,6 +32,8 @@ style="width:400px; height:auto;">
 
 I have two brothers one older and one younger.
 
+<img src="/chasewebsite/images/three-happy-cartoon-boys-who-support-each-other-vector-9170265.jpg" alt="Description"
+style="width:400px; height:auto;">
 _______________________________________________________________________________
 
 <a href="https://chase712.github.io/chasewebsite/devops/tools/verify" target="_blank" style="text-decoration:none;">
@@ -39,12 +41,6 @@ _______________________________________________________________________________
         Tools Verify
     </button>
 </a>
-
-
-_______________________________________________________________________________
-
-<img src="/chasewebsite/images/three-happy-cartoon-boys-who-support-each-other-vector-9170265.jpg" alt="Description"
-style="width:400px; height:auto;">
 
 
 _______________________________________________________________________________
