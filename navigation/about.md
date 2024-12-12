@@ -106,5 +106,4 @@ _______________________________________________________________________________
 My mom is from Lithuania
 
 
-![alt text](../images/Flag_of_Lithuania.svg)
-style="width:400px; height:auto;">
+![alt text](../images/Flag_of_Lithuania.svg) alt="Description" style="width:400px; height:auto;">
