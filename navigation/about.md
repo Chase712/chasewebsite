@@ -34,23 +34,14 @@ I have two brothers one older and one younger.
 
 <img src="/chasewebsite/images/three-happy-cartoon-boys-who-support-each-other-vector-9170265.jpg" alt="Description"
 style="width:400px; height:auto;">
-_______________________________________________________________________________
 
-<a href="https://chase712.github.io/chasewebsite/devops/tools/verify" target="_blank" style="text-decoration:none;">
-    <button style="padding:10px 20px; background-color:#ADD8E6; color:black; border:none; border-radius:5px; cursor:pointer;">
-        Tools Verify
-    </button>
-</a>
-
-
-_______________________________________________________________________________
- 
+ _______________________________________________________________________________
 
 Birthday:
 
 I was born on August 9th
 
-_______________________________________________________________________________
+
 
 
 <img src="/chasewebsite/images/birthday-cake-decorated-with-colorful-sprinkles-and-royalty-free-image-1653509348.jpg" alt="Description"
@@ -60,7 +51,7 @@ _______________________________________________________________________________
 
 My favorite food is tacos.
 
-_______________________________________________________________________________
+
 
 
 <img src="/chasewebsite/images/iStock-960337396-3beef-barbacoa-tacos-e1695391119564-500x500.jpg" alt="Description"
@@ -68,3 +59,13 @@ style="width:400px; height:auto;">
 
 
 
+_______________________________________________________________________________
+
+
+Here is my Tools Verification Page:
+
+<a href="https://chase712.github.io/chasewebsite/devops/tools/verify" target="_blank" style="text-decoration:none;">
+    <button style="padding:10px 20px; background-color:#ADD8E6; color:black; border:none; border-radius:5px; cursor:pointer;">
+        Tools Verify
+    </button>
+</a>
