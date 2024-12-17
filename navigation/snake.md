@@ -13,7 +13,7 @@ permalink: /snake/
         margin-right: auto;
     }
 
-    canvas{
+    canv-as{
         display: none;
         border-style: solid;
         border-width: 10px;
@@ -268,7 +268,7 @@ permalink: /snake/
             }
             // Repaint canvas
             ctx.beginPath();
-            ctx.fillStyle = "royalblue";
+            ctx.fillStyle = "gold";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             // Paint snake
             for(let i = 0; i < snake.length; i++){
