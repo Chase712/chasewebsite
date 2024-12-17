@@ -69,3 +69,11 @@ Here is my Tools Verification Page:
         Tools Verify
     </button>
 </a>
+
+Here is the snake game
+
+<a href="https://chase712.github.io/chasewebsite/snake" target="_blank" style="text-decoration:none;">
+    <button style="padding:10px 20px; background-color:#ADD8E6; color:black; border:none; border-radius:5px; cursor:pointer;">
+        Tools Verify
+    </button>
+</a>
