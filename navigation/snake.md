@@ -1,3 +1,64 @@
+window.onload = function () {
+    // HTML Events to Functions
+    button_new_game.onclick = function (event) {
+        event.preventDefault(); // Prevent default link action
+        newGame();
+    };
+    button_new_game1.onclick = function (event) {
+        event.preventDefault();
+        newGame();
+    };
+    button_new_game2.onclick = function (event) {
+        event.preventDefault();
+        newGame();
+    };
+    button_setting_menu.onclick = function (event) {
+        event.preventDefault();
+        showScreen(SCREEN_SETTING);
+    };
+    button_setting_menu1.onclick = function (event) {
+        event.preventDefault();
+        showScreen(SCREEN_SETTING);
+    };
+
+    // speed
+    setSnakeSpeed(150);
+    for (let i = 0; i < speed_setting.length; i++) {
+        speed_setting[i].addEventListener("click", function () {
+            for (let i = 0; i < speed_setting.length; i++) {
+                if (speed_setting[i].checked) {
+                    setSnakeSpeed(speed_setting[i].value);
+                }
+            }
+        });
+    }
+
+    // wall setting
+    setWall(1);
+    for (let i = 0; i < wall_setting.length; i++) {
+        wall_setting[i].addEventListener("click", function () {
+            for (let i = 0; i < wall_setting.length; i++) {
+                if (wall_setting[i].checked) {
+                    setWall(wall_setting[i].value);
+                }
+            }
+        });
+    }
+
+    // activate window events
+    window.addEventListener(
+        "keydown",
+        function (evt) {
+            // spacebar detected
+            if (evt.code === "Space" && SCREEN !== SCREEN_SNAKE) newGame();
+        },
+        true
+    );
+};
+
+
+
+
 <script>
     (function () {
         /* Attributes of Game */
