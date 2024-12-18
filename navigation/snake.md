@@ -328,7 +328,7 @@ permalink: /snake/
         /* Dot for Food or Snake part */
         /////////////////////////////////////////////////////////////
         let activeDot = function(x, y){
-            ctx.fillStyle =/chasewebsite/images/360_F_197537431_bL6Gy5AbpxZyVNCzL421DJ1MoHiaq7YH.jpg
+            <img src="/chasewebsite/images/360_F_197537431_bL6Gy5AbpxZyVNCzL421DJ1MoHiaq7YH.jpg
             ctx.fillRect(x * BLOCK, y * BLOCK, BLOCK, BLOCK);
         }
         /* Random food placement */
