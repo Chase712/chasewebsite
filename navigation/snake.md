@@ -1,8 +1,3 @@
-</script>
-layout: base
-title: Snake
-permalink: /snake/
----
 
 <style>
 
