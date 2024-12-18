@@ -1,221 +1,220 @@
+<style>
+    body {
+        background-color: #000000; /* Fixing background */
+        color: #FFFFFF;
+    }
+
+    .container {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    #snake {
+        border-style: solid;
+        border-width: 10px;
+        border-color: #FFFFFF;
+    }
+
+    #menu, #gameover, #setting {
+        display: none;
+    }
+
+    #menu.active, #gameover.active, #setting.active {
+        display: block;
+    }
+
+    .link-alert {
+        cursor: pointer;
+        font-size: 20px;
+        color: #FFFFFF;
+        margin: 10px 0;
+    }
+
+    .link-alert:hover {
+        color: #FFD700;
+    }
+</style>
+
+<div class="container">
+    <h2>Snake</h2>
+    <header class="pb-3 mb-4 border-bottom border-primary text-dark">
+        <p class="fs-4">Score: <span id="score_value">0</span></p>
+    </header>
+    <div id="menu" class="active">
+        <p>Press <span style="background-color: #FFFFFF; color: #000000">space</span> to start the game.</p>
+        <a id="new_game" class="link-alert">New Game</a>
+        <a id="setting_menu" class="link-alert">Settings</a>
+    </div>
+    <div id="gameover">
+        <p>Game Over! Press <span style="background-color: #FFFFFF; color: #000000">space</span> to restart.</p>
+        <a id="new_game1" class="link-alert">New Game</a>
+        <a id="setting_menu1" class="link-alert">Settings</a>
+    </div>
+    <canvas id="snake" width="320" height="320" tabindex="1"></canvas>
+    <div id="setting">
+        <p>Settings:</p>
+        <p>Speed:</p>
+        <input type="radio" id="speed1" name="speed" value="120" checked>
+        <label for="speed1">Slow</label>
+        <input type="radio" id="speed2" name="speed" value="75">
+        <label for="speed2">Normal</label>
+        <input type="radio" id="speed3" name="speed" value="35">
+        <label for="speed3">Fast</label>
+        <p>Wall:</p>
+        <input type="radio" id="wallon" name="wall" value="1" checked>
+        <label for="wallon">On</label>
+        <input type="radio" id="walloff" name="wall" value="0">
+        <label for="walloff">Off</label>
+        <a id="new_game2" class="link-alert">New Game</a>
+    </div>
+</div>
+
 <script>
     (function () {
-        /* Attributes of Game */
-        /////////////////////////////////////////////////////////////
-        // Canvas & Context
         const canvas = document.getElementById("snake");
         const ctx = canvas.getContext("2d");
+        const scoreDisplay = document.getElementById("score_value");
+        const screens = {
+            menu: document.getElementById("menu"),
+            gameover: document.getElementById("gameover"),
+            setting: document.getElementById("setting"),
+        };
 
-        // HTML Game IDs
-        const SCREEN_SNAKE = 0;
-        const screen_snake = document.getElementById("snake");
-        const ele_score = document.getElementById("score_value");
-        const speed_setting = document.getElementsByName("speed");
-        const wall_setting = document.getElementsByName("wall");
+        const buttons = {
+            newGame: document.getElementById("new_game"),
+            newGame1: document.getElementById("new_game1"),
+            newGame2: document.getElementById("new_game2"),
+            settingsMenu: document.getElementById("setting_menu"),
+            settingsMenu1: document.getElementById("setting_menu1"),
+        };
 
-        // HTML Screen IDs (div)
-        const SCREEN_MENU = -1, SCREEN_GAME_OVER = 1, SCREEN_SETTING = 2;
-        const screen_menu = document.getElementById("menu");
-        const screen_game_over = document.getElementById("gameover");
-        const screen_setting = document.getElementById("setting");
-
-        // HTML Event IDs (a tags)
-        const button_new_game = document.getElementById("new_game");
-        const button_new_game1 = document.getElementById("new_game1");
-        const button_new_game2 = document.getElementById("new_game2");
-        const button_setting_menu = document.getElementById("setting_menu");
-        const button_setting_menu1 = document.getElementById("setting_menu1");
-
-        // Game Control
-        const BLOCK = 10;   // size of block rendering
-        let SCREEN = SCREEN_MENU;
-        let snake;
-        let snake_dir;
-        let snake_next_dir;
-        let snake_speed;
+        let snake = [];
         let food = { x: 0, y: 0 };
-        let score;
-        let wall;
+        let direction = 1; // 0 - Up, 1 - Right, 2 - Down, 3 - Left
+        let nextDirection = 1;
+        let score = 0;
+        let speed = 120;
+        let wall = 1;
 
-        // Food Image Setup
-        const foodImage = new Image();
-        foodImage.src = "/chasewebsite/images/360_F_197537431_bL6Gy5AbpxZyVNCzL421DJ1MoHiaq7YH.jpg";
-        let foodImageLoaded = false;
+        function showScreen(screenName) {
+            Object.values(screens).forEach((screen) => (screen.className = ""));
+            screens[screenName].className = "active";
+        }
 
-        foodImage.onload = function () {
-            foodImageLoaded = true;
-            console.log("Food image loaded successfully.");
-        };
-
-        foodImage.onerror = function () {
-            console.error("Failed to load food image. Falling back to rectangle rendering.");
-        };
-
-        /* Display Control */
-        /////////////////////////////////////////////////////////////
-        let showScreen = function (screen_opt) {
-            SCREEN = screen_opt;
-            switch (screen_opt) {
-                case SCREEN_SNAKE:
-                    screen_snake.style.display = "block";
-                    screen_menu.style.display = "none";
-                    screen_setting.style.display = "none";
-                    screen_game_over.style.display = "none";
-                    break;
-                case SCREEN_GAME_OVER:
-                    screen_snake.style.display = "block";
-                    screen_menu.style.display = "none";
-                    screen_setting.style.display = "none";
-                    screen_game_over.style.display = "block";
-                    break;
-                case SCREEN_SETTING:
-                    screen_snake.style.display = "none";
-                    screen_menu.style.display = "none";
-                    screen_setting.style.display = "block";
-                    screen_game_over.style.display = "none";
-                    break;
-            }
-        };
-
-        /* Dot for Food or Snake Part */
-        /////////////////////////////////////////////////////////////
-        let activeDot = function (x, y, isFood = false) {
-            if (isFood && foodImageLoaded) {
-                // Draw food as an image
-                ctx.drawImage(foodImage, x * BLOCK, y * BLOCK, BLOCK, BLOCK);
-            } else if (isFood) {
-                // Fallback to red rectangle for food
-                ctx.fillStyle = "red";
-                ctx.fillRect(x * BLOCK, y * BLOCK, BLOCK, BLOCK);
-            } else {
-                // Draw snake as a brown rectangle
-                ctx.fillStyle = "#964B00";
-                ctx.fillRect(x * BLOCK, y * BLOCK, BLOCK, BLOCK);
-            }
-        };
-
-        /* Random Food Placement */
-        /////////////////////////////////////////////////////////////
-        let addFood = function () {
-            food.x = Math.floor(Math.random() * ((canvas.width / BLOCK) - 1));
-            food.y = Math.floor(Math.random() * ((canvas.height / BLOCK) - 1));
-            for (let i = 0; i < snake.length; i++) {
-                if (checkBlock(food.x, food.y, snake[i].x, snake[i].y)) {
-                    addFood();
-                }
-            }
-        };
-
-        /* Collision Detection */
-        /////////////////////////////////////////////////////////////
-        let checkBlock = function (x, y, _x, _y) {
-            return (x === _x && y === _y);
-        };
-
-        /* Update Score */
-        /////////////////////////////////////////////////////////////
-        let altScore = function (score_val) {
-            ele_score.innerHTML = String(score_val);
-        };
-
-        /* Main Loop */
-        /////////////////////////////////////////////////////////////
-        let mainLoop = function () {
-            let _x = snake[0].x;
-            let _y = snake[0].y;
-            snake_dir = snake_next_dir;
-
-            // Direction 0 - Up, 1 - Right, 2 - Down, 3 - Left
-            switch (snake_dir) {
-                case 0: _y--; break;
-                case 1: _x++; break;
-                case 2: _y++; break;
-                case 3: _x--; break;
-            }
-
-            snake.pop(); // Remove tail
-            snake.unshift({ x: _x, y: _y }); // Add new head
-
-            // Wall Collision Check
-            if (wall === 1) {
-                if (_x < 0 || _x === canvas.width / BLOCK || _y < 0 || _y === canvas.height / BLOCK) {
-                    showScreen(SCREEN_GAME_OVER);
-                    return;
-                }
-            } else {
-                // Wrap Around
-                if (_x < 0) _x += canvas.width / BLOCK;
-                if (_x >= canvas.width / BLOCK) _x -= canvas.width / BLOCK;
-                if (_y < 0) _y += canvas.height / BLOCK;
-                if (_y >= canvas.height / BLOCK) _y -= canvas.height / BLOCK;
-            }
-
-            // Self Collision
-            for (let i = 1; i < snake.length; i++) {
-                if (snake[0].x === snake[i].x && snake[0].y === snake[i].y) {
-                    showScreen(SCREEN_GAME_OVER);
-                    return;
-                }
-            }
-
-            // Food Collision
-            if (checkBlock(snake[0].x, snake[0].y, food.x, food.y)) {
-                snake.push({ x: snake[0].x, y: snake[0].y });
-                altScore(++score);
-                addFood();
-            }
-
-            // Clear Canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw Snake
-            for (let i = 0; i < snake.length; i++) {
-                activeDot(snake[i].x, snake[i].y);
-            }
-
-            // Draw Food
-            activeDot(food.x, food.y, true);
-
-            setTimeout(mainLoop, snake_speed);
-        };
-
-        /* New Game */
-        /////////////////////////////////////////////////////////////
-        let newGame = function () {
-            showScreen(SCREEN_SNAKE);
-            screen_snake.focus();
-
+        function startGame() {
+            snake = [{ x: 15, y: 15 }];
             score = 0;
-            altScore(score);
-
-            snake = [{ x: 5, y: 5 }];
-            snake_dir = 1;
-            snake_next_dir = 1;
-
-            addFood();
+            updateScore();
+            direction = 1;
+            nextDirection = 1;
+            placeFood();
+            showScreen("menu");
             mainLoop();
-        };
+        }
 
-        /* Initialization */
-        /////////////////////////////////////////////////////////////
-        window.onload = function () {
-            button_new_game.onclick = newGame;
-            button_new_game1.onclick = newGame;
-            button_new_game2.onclick = newGame;
+        function updateScore() {
+            scoreDisplay.textContent = score;
+        }
 
-            setSnakeSpeed(100);
-            setWall(1);
-        };
+        function placeFood() {
+            food.x = Math.floor(Math.random() * (canvas.width / 10));
+            food.y = Math.floor(Math.random() * (canvas.height / 10));
+        }
 
-        /* Utility Functions */
-        /////////////////////////////////////////////////////////////
-        let setSnakeSpeed = function (speed) {
-            snake_speed = speed;
-        };
+        function mainLoop() {
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        let setWall = function (wall_value) {
-            wall = wall_value;
-            screen_snake.style.borderColor = wall ? "#FFFFFF" : "#606060";
-        };
+            ctx.fillStyle = "white";
+            snake.forEach((segment) => {
+                ctx.fillRect(segment.x * 10, segment.y * 10, 10, 10);
+            });
+
+            ctx.fillStyle = "red";
+            ctx.fillRect(food.x * 10, food.y * 10, 10, 10);
+
+            const head = { ...snake[0] };
+            switch (direction) {
+                case 0:
+                    head.y--;
+                    break;
+                case 1:
+                    head.x++;
+                    break;
+                case 2:
+                    head.y++;
+                    break;
+                case 3:
+                    head.x--;
+                    break;
+            }
+
+            if (wall === 1 && (head.x < 0 || head.x >= 32 || head.y < 0 || head.y >= 32)) {
+                showScreen("gameover");
+                return;
+            }
+
+            if (wall === 0) {
+                if (head.x < 0) head.x = 31;
+                if (head.x >= 32) head.x = 0;
+                if (head.y < 0) head.y = 31;
+                if (head.y >= 32) head.y = 0;
+            }
+
+            if (snake.some((segment) => segment.x === head.x && segment.y === head.y)) {
+                showScreen("gameover");
+                return;
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                updateScore();
+                placeFood();
+            } else {
+                snake.pop();
+            }
+
+            setTimeout(mainLoop, speed);
+        }
+
+        buttons.newGame.addEventListener("click", startGame);
+        buttons.newGame1.addEventListener("click", startGame);
+        buttons.newGame2.addEventListener("click", startGame);
+
+        buttons.settingsMenu.addEventListener("click", () => showScreen("setting"));
+        buttons.settingsMenu1.addEventListener("click", () => showScreen("setting"));
+
+        document.getElementsByName("speed").forEach((input) => {
+            input.addEventListener("change", () => {
+                speed = parseInt(input.value);
+            });
+        });
+
+        document.getElementsByName("wall").forEach((input) => {
+            input.addEventListener("change", () => {
+                wall = parseInt(input.value);
+            });
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.code === "Space" && screens.menu.className === "active") {
+                startGame();
+            }
+
+            const keyDirections = {
+                ArrowUp: 0,
+                ArrowRight: 1,
+                ArrowDown: 2,
+                ArrowLeft: 3,
+            };
+
+            if (keyDirections[event.key] !== undefined && Math.abs(direction - keyDirections[event.key]) !== 2) {
+                nextDirection = keyDirections[event.key];
+            }
+        });
+
+        startGame();
     })();
 </script>
