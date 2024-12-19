@@ -1,3 +1,93 @@
+---
+layout: page
+title: Snake
+search_exclude: true
+permalink: /snake/
+---
+
+<style>
+    body {
+        text-align: center;
+    }
+
+    .wrap {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    canvas {
+        border-style: solid;
+        border-width: 10px;
+        border-color: rgb(30, 121, 44);
+        display: block;
+        margin: 0 auto;
+    }
+
+    #gameover p, #setting p, #menu p {
+        font-size: 20px;
+    }
+
+    #gameover a, #setting a, #menu a {
+        font-size: 30px;
+        display: block;
+    }
+
+    #gameover a:hover, #setting a:hover, #menu a:hover {
+        cursor: pointer;
+    }
+
+    #menu {
+        display: block;
+    }
+
+    #gameover {
+        display: none;
+    }
+
+    #setting {
+        display: none;
+    }
+</style>
+
+<h2>Snake Game</h2>
+<div class="container">
+    <header class="pb-3 mb-4 border-bottom border-primary text-dark">
+        <p class="fs-4">Score: <span id="score_value">0</span></p>
+    </header>
+    <div class="container bg-secondary" style="text-align:center;">
+        <div id="menu" class="py-4 text-light">
+            <p>Welcome to Snake, press <span style="background-color: rgb(220,37,37); color: #000000">space</span> to begin</p>
+            <a id="new_game" class="link-alert">new game</a>
+            <a id="setting_menu" class="link-alert">settings</a>
+        </div>
+        <div id="gameover" class="py-4 text-light">
+            <p>Game Over, press <span style="background-color:rgb(220, 37, 37); color: #000000">space</span> to try again</p>
+            <a id="new_game1" class="link-alert">new game</a>
+            <a id="setting_menu1" class="link-alert">settings</a>
+        </div>
+        <canvas id="snake" class="wrap" width="400" height="400" tabindex="1"></canvas>
+        <div id="setting" class="py-4 text-light">
+            <p>Settings Screen, press <span style="background-color:rgb(220, 37, 37); color: #000000">space</span> to go back to playing</p>
+            <a id="new_game2" class="link-alert">new game</a>
+            <br>
+            <p>Speed:
+                <input id="speed1" type="radio" name="speed" value="200" checked />
+                <label for="speed1">Slow</label>
+                <input id="speed2" type="radio" name="speed" value="150" />
+                <label for="speed2">Normal</label>
+                <input id="speed3" type="radio" name="speed" value="100" />
+                <label for="speed3">Fast</label>
+            </p>
+            <p>Wall:
+                <input id="wallon" type="radio" name="wall" value="1" checked />
+                <label for="wallon">On</label>
+                <input id="walloff" type="radio" name="wall" value="0" />
+                <label for="walloff">Off</label>
+            </p>
+        </div>
+    </div>
+</div>
+
 <script>
 (function () {
     const canvas = document.getElementById("snake");
@@ -20,7 +110,7 @@
     let snake_dir;
     let snake_next_dir;
     let snake_speed;
-    let food = [];
+    let food = { x: 0, y: 0 };
     let score;
     let wall;
 
@@ -37,10 +127,10 @@
         snake_dir = "RIGHT";
         snake_next_dir = "RIGHT";
         score = 0;
-        food = [
-            { x: Math.floor(Math.random() * (canvas.width / BLOCK)), y: Math.floor(Math.random() * (canvas.height / BLOCK)) },
-            { x: Math.floor(Math.random() * (canvas.width / BLOCK)), y: Math.floor(Math.random() * (canvas.height / BLOCK)) }
-        ];
+        food = {
+            x: Math.floor(Math.random() * (canvas.width / BLOCK)),
+            y: Math.floor(Math.random() * (canvas.height / BLOCK))
+        };
         snake_speed = 150; // Default speed
         if (speed_setting[0].checked) {
             snake_speed = 200; // Slow
@@ -73,112 +163,104 @@
     }
 
     function drawFood() {
-        food.forEach((item) => {
-            ctx.fillStyle = "white";
-            ctx.beginPath();
-            ctx.arc(item.x * BLOCK + BLOCK / 2, item.y * BLOCK + BLOCK / 2, BLOCK / 2, 0, 2 * Math.PI);
-            ctx.fill();
-        });
+        // Draw food as a white circle with red stitches
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Draw the red stitches (lines) of the baseball
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        
+        // Drawing two lines crossing to simulate the stitches of a baseball
+        ctx.beginPath();
+        ctx.moveTo(food.x * BLOCK + BLOCK / 4, food.y * BLOCK + BLOCK / 2);
+        ctx.lineTo(food.x * BLOCK + 3 * BLOCK / 4, food.y * BLOCK + BLOCK / 2);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 4);
+        ctx.lineTo(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + 3 * BLOCK / 4);
+        ctx.stroke();
     }
 
-    function updateSnake() {
-        const head = { ...snake[0] };
+    function updateSnakePosition() {
+        let head = { ...snake[0] };
 
-        // Update snake head direction
-        if (snake_dir === "UP") head.y--;
-        else if (snake_dir === "DOWN") head.y++;
-        else if (snake_dir === "LEFT") head.x--;
-        else if (snake_dir === "RIGHT") head.x++;
+        // Update head position based on direction
+        if (snake_next_dir === "UP") head.y--;
+        if (snake_next_dir === "DOWN") head.y++;
+        if (snake_next_dir === "LEFT") head.x--;
+        if (snake_next_dir === "RIGHT") head.x++;
 
-        // Check for wall collisions
-        if (wall && (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK)) {
-            endGame();
-            return;
+        snake.unshift(head); // Add the new head
+
+        // If snake eats food, increase score and spawn new food
+        if (head.x === food.x && head.y === food.y) {
+            score++;
+            ele_score.innerText = score;
+            food = {
+                x: Math.floor(Math.random() * (canvas.width / BLOCK)),
+                y: Math.floor(Math.random() * (canvas.height / BLOCK))
+            };
+        } else {
+            snake.pop(); // Remove the last part of the snake
         }
 
-        // Check for self-collision
-        for (let i = 0; i < snake.length; i++) {
+        // Wall collision check (if enabled)
+        if (wall) {
+            if (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK) {
+                gameOver();
+            }
+        }
+
+        // Self-collision check
+        for (let i = 1; i < snake.length; i++) {
             if (head.x === snake[i].x && head.y === snake[i].y) {
-                endGame();
-                return;
+                gameOver();
             }
         }
-
-        snake.unshift(head); // Add the new head to the snake
-
-        // Check if snake ate any food
-        for (let i = 0; i < food.length; i++) {
-            if (head.x === food[i].x && head.y === food[i].y) {
-                score++;
-                ele_score.innerHTML = score;
-                food[i] = { x: Math.floor(Math.random() * (canvas.width / BLOCK)), y: Math.floor(Math.random() * (canvas.height / BLOCK)) };
-            }
-        }
-
-        // If no food eaten, remove the tail of the snake
-        snake.pop();
     }
 
-    function endGame() {
-        SCREEN = 0; // Game over state
+    function gameOver() {
+        SCREEN = 0;
         screen_game_over.style.display = "block";
     }
 
     function gameLoop() {
-        if (SCREEN === 1) {
-            // Update direction only when snake_dir and snake_next_dir are different
-            if (snake_dir !== snake_next_dir) {
-                snake_dir = snake_next_dir;
-            }
+        if (SCREEN !== 1) return;
 
-            drawBackground();
-            drawSnake();
-            drawFood();
-            updateSnake();
-            setTimeout(gameLoop, snake_speed); // Repeat the game loop based on the speed setting
-        }
+        // Game screen logic
+        drawBackground();
+        drawSnake();
+        drawFood();
+        updateSnakePosition();
+
+        snake_dir = snake_next_dir; // Update snake direction
+        setTimeout(gameLoop, snake_speed); // Loop the game based on speed
     }
 
-    function changeDirection(event) {
-        if (event.keyCode === 37 && snake_dir !== "RIGHT") {
-            snake_next_dir = "LEFT";
-        } else if (event.keyCode === 38 && snake_dir !== "DOWN") {
-            snake_next_dir = "UP";
-        } else if (event.keyCode === 39 && snake_dir !== "LEFT") {
-            snake_next_dir = "RIGHT";
-        } else if (event.keyCode === 40 && snake_dir !== "UP") {
-            snake_next_dir = "DOWN";
-        }
-    }
-
-    // Handling user input and transitions
-    document.addEventListener("keydown", function (e) {
-        if (SCREEN === 1) {
-            changeDirection(e);
-        } else if (e.keyCode === 32) {
-            if (SCREEN === -1) {
-                initGame();
-            } else if (SCREEN === 0) {
-                initGame();
-            }
-        }
+    // Event listeners
+    document.addEventListener("keydown", (e) => {
+        if (SCREEN === 0) return; // Do nothing if game is over
+        if (e.key === "ArrowLeft" && snake_dir !== "RIGHT") snake_next_dir = "LEFT";
+        if (e.key === "ArrowUp" && snake_dir !== "DOWN") snake_next_dir = "UP";
+        if (e.key === "ArrowRight" && snake_dir !== "LEFT") snake_next_dir = "RIGHT";
+        if (e.key === "ArrowDown" && snake_dir !== "UP") snake_next_dir = "DOWN";
     });
 
-    // Start a new game when 'New Game' button is clicked
+    // Button handlers
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
     button_new_game2.addEventListener("click", initGame);
-    button_setting_menu.addEventListener("click", function () {
-        SCREEN = 2;
+    button_setting_menu.addEventListener("click", () => {
+        screen_menu.style.display = "none";
         screen_setting.style.display = "block";
     });
-
-    button_setting_menu1.addEventListener("click", function () {
-        SCREEN = 2;
+    button_setting_menu1.addEventListener("click", () => {
+        screen_game_over.style.display = "none";
         screen_setting.style.display = "block";
     });
-
-    // Set initial menu
-    screen_menu.style.display = "block";
 })();
 </script>
