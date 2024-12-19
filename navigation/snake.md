@@ -167,12 +167,11 @@ permalink: /snake/
         // Bottom-left corner
         ctx.fillRect(0, canvas.height - cornerSize, cornerSize, cornerSize);
         
-        // Bottom-right home plate (pentagon shape)
+        // Bottom-right home plate (corrected shape)
         ctx.beginPath();
-        ctx.moveTo(canvas.width - cornerSize, canvas.height);
-        ctx.lineTo(canvas.width - cornerSize - 20, canvas.height - 20);
-        ctx.lineTo(canvas.width - 20, canvas.height - 20);
-        ctx.lineTo(canvas.width - 20, canvas.height);
+        ctx.moveTo(canvas.width - cornerSize, canvas.height); // Bottom-right corner
+        ctx.lineTo(canvas.width - cornerSize - 10, canvas.height - 10); // Bottom-left part of home plate
+        ctx.lineTo(canvas.width - 20, canvas.height - 10); // Bottom-right part of home plate
         ctx.closePath();
         ctx.fill();
     }
