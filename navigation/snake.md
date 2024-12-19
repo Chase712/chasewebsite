@@ -18,7 +18,7 @@ permalink: /snake/
     canvas {
         border-style: solid;
         border-width: 10px;
-        border-color: brown; /* Changed to brown */
+        border-color: #A52A2A; /* Changed to a lighter brown color */
         display: block;
         margin: 0 auto;
     }
