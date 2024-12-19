@@ -1,4 +1,4 @@
----
+ ---
 layout: page
 title: Snake
 search_exclude: true
@@ -18,7 +18,7 @@ permalink: /snake/
     canvas {
         border-style: solid;
         border-width: 10px;
-        border-color: #C19A6B;
+        border-color: #C19A6B; /* Updated to the brown color #C19A6B */
         display: block;
         margin: 0 auto;
     }
@@ -114,6 +114,10 @@ permalink: /snake/
     let score;
     let wall;
 
+    // Set snake color to light brown
+    const snakeColor = "#D2B48C"; // Light brown
+
+    // Game logic
     function initGame() {
         snake = [
             { x: 5, y: 5 },
@@ -127,20 +131,20 @@ permalink: /snake/
             x: Math.floor(Math.random() * (canvas.width / BLOCK)),
             y: Math.floor(Math.random() * (canvas.height / BLOCK))
         };
-        snake_speed = 150;
+        snake_speed = 150; // Default speed
         if (speed_setting[0].checked) {
-            snake_speed = 200;
+            snake_speed = 200; // Slow
         } else if (speed_setting[1].checked) {
-            snake_speed = 150;
+            snake_speed = 150; // Normal
         } else if (speed_setting[2].checked) {
-            snake_speed = 100;
+            snake_speed = 100; // Fast
         }
         if (wall_setting[0].checked) {
             wall = true;
         } else {
             wall = false;
         }
-        SCREEN = 1;
+        SCREEN = 1; // Set screen to playing state
         screen_menu.style.display = "none";
         screen_game_over.style.display = "none";
         gameLoop();
@@ -148,38 +152,54 @@ permalink: /snake/
 
     function drawBackground() {
         ctx.fillStyle = "green";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // Full green background
 
+        // Draw white squares in each corner
         const cornerSize = 20;
         ctx.fillStyle = "white";
-
+        
+        // Top-left corner
         ctx.fillRect(0, 0, cornerSize, cornerSize);
+        
+        // Top-right corner
         ctx.fillRect(canvas.width - cornerSize, 0, cornerSize, cornerSize);
+        
+        // Bottom-left corner
         ctx.fillRect(0, canvas.height - cornerSize, cornerSize, cornerSize);
-        ctx.fillRect(canvas.width - cornerSize, canvas.height - cornerSize, cornerSize, cornerSize);
+        
+        // Bottom-right home plate (corrected shape)
+        ctx.beginPath();
+        ctx.moveTo(canvas.width - cornerSize, canvas.height); // Bottom-right corner
+        ctx.lineTo(canvas.width - cornerSize - 10, canvas.height - 10); // Bottom-left part of home plate
+        ctx.lineTo(canvas.width - 20, canvas.height - 10); // Bottom-right part of home plate
+        ctx.closePath();
+        ctx.fill();
     }
 
     function drawSnake() {
-        ctx.fillStyle = "#D2B48C";
+        ctx.fillStyle = snakeColor; // Set snake color to light brown
         for (let i = 0; i < snake.length; i++) {
             ctx.fillRect(snake[i].x * BLOCK, snake[i].y * BLOCK, BLOCK, BLOCK);
         }
     }
 
     function drawFood() {
+        // Draw food as a white circle with red stitches
         ctx.fillStyle = "white";
         ctx.beginPath();
         ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2, 0, 2 * Math.PI);
         ctx.fill();
-
+        
+        // Draw the red stitches (lines) of the baseball
         ctx.strokeStyle = "red";
         ctx.lineWidth = 2;
-
+        
+        // Drawing two lines crossing to simulate the stitches of a baseball
         ctx.beginPath();
         ctx.moveTo(food.x * BLOCK + BLOCK / 4, food.y * BLOCK + BLOCK / 2);
         ctx.lineTo(food.x * BLOCK + 3 * BLOCK / 4, food.y * BLOCK + BLOCK / 2);
         ctx.stroke();
-
+        
         ctx.beginPath();
         ctx.moveTo(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 4);
         ctx.lineTo(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + 3 * BLOCK / 4);
@@ -189,13 +209,15 @@ permalink: /snake/
     function updateSnakePosition() {
         let head = { ...snake[0] };
 
+        // Update head position based on direction
         if (snake_next_dir === "UP") head.y--;
         if (snake_next_dir === "DOWN") head.y++;
         if (snake_next_dir === "LEFT") head.x--;
         if (snake_next_dir === "RIGHT") head.x++;
 
-        snake.unshift(head);
+        snake.unshift(head); // Add the new head
 
+        // If snake eats food, increase score and spawn new food
         if (head.x === food.x && head.y === food.y) {
             score++;
             ele_score.innerText = score;
@@ -204,53 +226,52 @@ permalink: /snake/
                 y: Math.floor(Math.random() * (canvas.height / BLOCK))
             };
         } else {
-            snake.pop();
+            snake.pop(); // Remove the last part of the snake
         }
 
-        if (wall && (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK)) {
-            gameOver();
+        // Wall collision check (if enabled)
+        if (wall) {
+            if (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK) {
+                gameOver();
+            }
         }
 
+        // Self-collision check
         for (let i = 1; i < snake.length; i++) {
-            if (snake[i].x === head.x && snake[i].y === head.y) {
+            if (head.x === snake[i].x && head.y === snake[i].y) {
                 gameOver();
             }
         }
     }
 
     function gameOver() {
-        SCREEN = 2;
-        screen_menu.style.display = "none";
+        SCREEN = 0;
         screen_game_over.style.display = "block";
     }
 
     function gameLoop() {
         if (SCREEN !== 1) return;
 
+        // Game screen logic
         drawBackground();
         drawSnake();
         drawFood();
         updateSnakePosition();
 
-        setTimeout(gameLoop, snake_speed);
+        snake_dir = snake_next_dir; // Update snake direction
+        setTimeout(gameLoop, snake_speed); // Loop the game based on speed
     }
 
+    // Event listeners
     document.addEventListener("keydown", (e) => {
-        if (SCREEN !== 1) return;
-
-        if (e.key === "ArrowUp" && snake_dir !== "DOWN") {
-            snake_next_dir = "UP";
-        } else if (e.key === "ArrowDown" && snake_dir !== "UP") {
-            snake_next_dir = "DOWN";
-        } else if (e.key === "ArrowLeft" && snake_dir !== "RIGHT") {
-            snake_next_dir = "LEFT";
-        } else if (e.key === "ArrowRight" && snake_dir !== "LEFT") {
-            snake_next_dir = "RIGHT";
-        } else if (e.key === " " && SCREEN === -1) {
-            initGame();
-        }
+        if (SCREEN === 0) return; // Do nothing if game is over
+        if (e.key === "ArrowLeft" && snake_dir !== "RIGHT") snake_next_dir = "LEFT";
+        if (e.key === "ArrowUp" && snake_dir !== "DOWN") snake_next_dir = "UP";
+        if (e.key === "ArrowRight" && snake_dir !== "LEFT") snake_next_dir = "RIGHT";
+        if (e.key === "ArrowDown" && snake_dir !== "UP") snake_next_dir = "DOWN";
     });
 
+    // Button handlers
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
     button_new_game2.addEventListener("click", initGame);
