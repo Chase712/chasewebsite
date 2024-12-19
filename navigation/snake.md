@@ -114,9 +114,9 @@ permalink: /snake/
     let score;
     let wall;
 
-    // Load food image
+    // Load a different baseball image
     const foodImage = new Image();
-    foodImage.src = "https://upload.wikimedia.org/wikipedia/commons/0/0d/Baseball_and_glove.jpg"; // Sample image
+    foodImage.src = "https://upload.wikimedia.org/wikipedia/commons/0/05/Baseball_-_Cropped.jpg"; // Updated baseball image
 
     // Set snake color
     const snakeColor = "brown";
@@ -151,6 +151,11 @@ permalink: /snake/
         gameLoop();
     }
 
+    function drawBackground() {
+        ctx.fillStyle = "green";
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // Draw full green background
+    }
+
     function drawSnake() {
         ctx.fillStyle = snakeColor;
         for (let i = 0; i < snake.length; i++) {
@@ -159,11 +164,11 @@ permalink: /snake/
     }
 
     function drawFood() {
-        ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK);
+        ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image
     }
 
     function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+        drawBackground(); // Draw the green background
         drawSnake(); // Draw snake
         drawFood(); // Draw food
         moveSnake(); // Move snake
@@ -246,6 +251,5 @@ permalink: /snake/
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
     button_new_game2.addEventListener("click", initGame);
-
 })();
 </script>
