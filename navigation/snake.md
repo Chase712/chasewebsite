@@ -65,7 +65,7 @@ permalink: /snake/
             <a id="new_game1" class="link-alert">new game</a>
             <a id="setting_menu1" class="link-alert">settings</a>
         </div>
-        <canvas id="snake" class="wrap" width="800" height="800" tabindex="1"></canvas>
+        <canvas id="snake" class="wrap" width="400" height="400" tabindex="1"></canvas>
         <div id="setting" class="py-4 text-light">
             <p>Settings Screen, press <span style="background-color:rgb(220, 37, 37); color: #000000">space</span> to go back to playing</p>
             <a id="new_game2" class="link-alert">new game</a>
@@ -92,8 +92,6 @@ permalink: /snake/
 (function () {
     const canvas = document.getElementById("snake");
     const ctx = canvas.getContext("2d");
-    const SCREEN_SNAKE = 0;
-    const SCREEN_MENU = -1, SCREEN_GAME_OVER = 1, SCREEN_SETTING = 2;
     const BLOCK = 20;
     const ele_score = document.getElementById("score_value");
     const speed_setting = document.getElementsByName("speed");
@@ -107,7 +105,7 @@ permalink: /snake/
     const button_setting_menu = document.getElementById("setting_menu");
     const button_setting_menu1 = document.getElementById("setting_menu1");
 
-    let SCREEN = SCREEN_MENU;
+    let SCREEN = -1;
     let snake;
     let snake_dir;
     let snake_next_dir;
@@ -116,11 +114,11 @@ permalink: /snake/
     let score;
     let wall;
 
-    // Load baseball image for food
+    // Load food image
     const foodImage = new Image();
-    foodImage.src = "https://upload.wikimedia.org/wikipedia/commons/0/0d/Baseball_and_glove.jpg";  // Link to baseball image
+    foodImage.src = "https://upload.wikimedia.org/wikipedia/commons/0/0d/Baseball_and_glove.jpg"; // Sample image
 
-    // Set brown color for snake
+    // Set snake color
     const snakeColor = "brown";
 
     // Game logic
@@ -154,7 +152,7 @@ permalink: /snake/
     }
 
     function drawSnake() {
-        ctx.fillStyle = snakeColor; // Brown snake
+        ctx.fillStyle = snakeColor;
         for (let i = 0; i < snake.length; i++) {
             ctx.fillRect(snake[i].x * BLOCK, snake[i].y * BLOCK, BLOCK, BLOCK);
         }
@@ -165,13 +163,13 @@ permalink: /snake/
     }
 
     function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawSnake();
-        drawFood();
-        moveSnake();
-        checkCollisions();
-        ele_score.innerText = score;
-        setTimeout(gameLoop, snake_speed);
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+        drawSnake(); // Draw snake
+        drawFood(); // Draw food
+        moveSnake(); // Move snake
+        checkCollisions(); // Check for collisions
+        ele_score.innerText = score; // Update score
+        setTimeout(gameLoop, snake_speed); // Continue game loop
     }
 
     function moveSnake() {
@@ -223,7 +221,7 @@ permalink: /snake/
     }
 
     function endGame() {
-        SCREEN = SCREEN_GAME_OVER;
+        SCREEN = 1; // Game Over screen
         screen_game_over.style.display = "block";
         screen_menu.style.display = "none";
         screen_setting.style.display = "none";
@@ -239,64 +237,15 @@ permalink: /snake/
             snake_next_dir = "LEFT";
         } else if (e.key === "ArrowRight" && snake_dir !== "LEFT") {
             snake_next_dir = "RIGHT";
-        } else if (e.key === " " && SCREEN === SCREEN_MENU) {
-            SCREEN = SCREEN_SNAKE;
-            screen_menu.style.display = "none";
+        } else if (e.key === " " && SCREEN === 1) {
+            initGame(); // Start new game
             screen_game_over.style.display = "none";
-            screen_setting.style.display = "none";
-            canvas.style.display = "block";
-            initGame();
-        } else if (e.key === " " && SCREEN === SCREEN_GAME_OVER) {
-            SCREEN = SCREEN_SNAKE;
-            screen_game_over.style.display = "none";
-            screen_menu.style.display = "none";
-            screen_setting.style.display = "none";
-            canvas.style.display = "block";
-            initGame();
         }
     });
 
-    button_new_game.addEventListener("click", () => {
-        SCREEN = SCREEN_SNAKE;
-        screen_menu.style.display = "none";
-        screen_game_over.style.display = "none";
-        screen_setting.style.display = "none";
-        canvas.style.display = "block";
-        initGame();
-    });
+    button_new_game.addEventListener("click", initGame);
+    button_new_game1.addEventListener("click", initGame);
+    button_new_game2.addEventListener("click", initGame);
 
-    button_new_game1.addEventListener("click", () => {
-        SCREEN = SCREEN_SNAKE;
-        screen_game_over.style.display = "none";
-        screen_menu.style.display = "none";
-        screen_setting.style.display = "none";
-        canvas.style.display = "block";
-        initGame();
-    });
-
-    button_new_game2.addEventListener("click", () => {
-        SCREEN = SCREEN_SNAKE;
-        screen_setting.style.display = "none";
-        screen_menu.style.display = "none";
-        screen_game_over.style.display = "none";
-        canvas.style.display = "block";
-        initGame();
-    });
-
-    button_setting_menu.addEventListener("click", () => {
-        SCREEN = SCREEN_SETTING;
-        screen_menu.style.display = "none";
-        screen_game_over.style.display = "none";
-        screen_setting.style.display = "block";
-        canvas.style.display = "none";
-    });
-
-    button_setting_menu1.addEventListener("click", () => {
-        SCREEN = SCREEN_SETTING;
-        screen_game_over.style.display = "none";
-        screen_menu.style.display = "none";
-        screen_setting.style.display = "block";
-        canvas.style.display = "none";
-    });
 })();
 </script>
