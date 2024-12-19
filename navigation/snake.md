@@ -144,6 +144,9 @@ permalink: /snake/
         } else {
             wall = false;
         }
+        SCREEN = 1; // Set screen to playing state
+        screen_menu.style.display = "none";
+        screen_game_over.style.display = "none";
         gameLoop();
     }
 
@@ -205,6 +208,7 @@ permalink: /snake/
     function updateSnakePosition() {
         let head = { ...snake[0] };
 
+        // Update head position based on direction
         if (snake_next_dir === "UP") head.y--;
         if (snake_next_dir === "DOWN") head.y++;
         if (snake_next_dir === "LEFT") head.x--;
@@ -273,9 +277,11 @@ permalink: /snake/
         }
     });
 
+    // Game start buttons
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
     button_new_game2.addEventListener("click", initGame);
+
     button_setting_menu.addEventListener("click", () => {
         screen_menu.style.display = "none";
         screen_setting.style.display = "block";
