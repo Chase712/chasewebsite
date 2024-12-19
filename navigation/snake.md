@@ -167,7 +167,7 @@ permalink: /snake/
         // Bottom-left corner
         ctx.fillRect(0, canvas.height - cornerSize, cornerSize, cornerSize);
         
-        // Bottom-right home plate (corrected shape)
+        // Bottom-right home plate (adjusted to look like a home plate shape)
         ctx.beginPath();
         ctx.moveTo(canvas.width - cornerSize, canvas.height); // Bottom-right corner
         ctx.lineTo(canvas.width - cornerSize - 10, canvas.height - 10); // Bottom-left part of home plate
@@ -226,52 +226,56 @@ permalink: /snake/
                 y: Math.floor(Math.random() * (canvas.height / BLOCK))
             };
         } else {
-            snake.pop(); // Remove the last part of the snake
+            snake.pop(); // Remove tail
         }
 
-        // Wall collision check (if enabled)
-        if (wall) {
-            if (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK) {
-                gameOver();
-            }
+        // Check for wall collision
+        if (wall && (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK)) {
+            gameOver();
         }
 
-        // Self-collision check
+        // Check for self collision
         for (let i = 1; i < snake.length; i++) {
-            if (head.x === snake[i].x && head.y === snake[i].y) {
+            if (snake[i].x === head.x && snake[i].y === head.y) {
                 gameOver();
             }
         }
     }
 
     function gameOver() {
-        SCREEN = 0;
+        SCREEN = 2; // Set screen to game over state
+        screen_menu.style.display = "none";
         screen_game_over.style.display = "block";
     }
 
     function gameLoop() {
         if (SCREEN !== 1) return;
-
-        // Game screen logic
+        
         drawBackground();
         drawSnake();
         drawFood();
         updateSnakePosition();
 
-        snake_dir = snake_next_dir; // Update snake direction
-        setTimeout(gameLoop, snake_speed); // Loop the game based on speed
+        setTimeout(gameLoop, snake_speed);
     }
 
-    // Event listeners
     document.addEventListener("keydown", (e) => {
-        if (SCREEN === 0) return; // Do nothing if game is over
-        if (e.key === "ArrowLeft" && snake_dir !== "RIGHT") snake_next_dir = "LEFT";
-        if (e.key === "ArrowUp" && snake_dir !== "DOWN") snake_next_dir = "UP";
-        if (e.key === "ArrowRight" && snake_dir !== "LEFT") snake_next_dir = "RIGHT";
-        if (e.key === "ArrowDown" && snake_dir !== "UP") snake_next_dir = "DOWN";
+        if (SCREEN !== 1) return;
+        
+        if (e.key === "ArrowUp" && snake_dir !== "DOWN") {
+            snake_next_dir = "UP";
+        } else if (e.key === "ArrowDown" && snake_dir !== "UP") {
+            snake_next_dir = "DOWN";
+        } else if (e.key === "ArrowLeft" && snake_dir !== "RIGHT") {
+            snake_next_dir = "LEFT";
+        } else if (e.key === "ArrowRight" && snake_dir !== "LEFT") {
+            snake_next_dir = "RIGHT";
+        } else if (e.key === " " && SCREEN === -1) {
+            initGame();
+        }
     });
 
-    // Button handlers
+    // Button actions
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
     button_new_game2.addEventListener("click", initGame);
