@@ -18,7 +18,7 @@ permalink: /snake/
     canvas {
         border-style: solid;
         border-width: 10px;
-        border-color: rgb(30, 121, 44);
+        border-color: brown; /* Changed to brown */
         display: block;
         margin: 0 auto;
     }
@@ -153,6 +153,22 @@ permalink: /snake/
     function drawBackground() {
         ctx.fillStyle = "green";
         ctx.fillRect(0, 0, canvas.width, canvas.height); // Full green background
+
+        // Draw white squares in each corner
+        const cornerSize = 20;
+        ctx.fillStyle = "white";
+        
+        // Top-left corner
+        ctx.fillRect(0, 0, cornerSize, cornerSize);
+        
+        // Top-right corner
+        ctx.fillRect(canvas.width - cornerSize, 0, cornerSize, cornerSize);
+        
+        // Bottom-left corner
+        ctx.fillRect(0, canvas.height - cornerSize, cornerSize, cornerSize);
+        
+        // Bottom-right corner
+        ctx.fillRect(canvas.width - cornerSize, canvas.height - cornerSize, cornerSize, cornerSize);
     }
 
     function drawSnake() {
