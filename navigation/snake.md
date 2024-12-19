@@ -114,12 +114,12 @@ permalink: /snake/
     let score;
     let wall;
 
-    // Load a different baseball image
+    // Load a different baseball image for the food
     const foodImage = new Image();
     foodImage.src = "https://upload.wikimedia.org/wikipedia/commons/0/05/Baseball_-_Cropped.jpg"; // Updated baseball image
 
-    // Set snake color
-    const snakeColor = "brown";
+    // Set snake color to lighter brown
+    const snakeColor = "#A52A2A"; // Lighter brown
 
     // Game logic
     function initGame() {
@@ -164,7 +164,14 @@ permalink: /snake/
     }
 
     function drawFood() {
-        ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image
+        // Ensure the food image is loaded before drawing it
+        if (foodImage.complete) {
+            ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image
+        } else {
+            foodImage.onload = () => {
+                ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image when loaded
+            };
+        }
     }
 
     function gameLoop() {
@@ -251,5 +258,9 @@ permalink: /snake/
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
     button_new_game2.addEventListener("click", initGame);
+    button_setting_menu.addEventListener("click", () => {
+        screen_menu.style.display = "none";
+        screen_setting.style.display = "block";
+    });
 })();
 </script>
