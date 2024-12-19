@@ -1,10 +1,3 @@
- ---
-layout: page
-title: Snake
-search_exclude: true
-permalink: /snake/
----
-
 <style>
     body {
         text-align: center;
