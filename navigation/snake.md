@@ -6,57 +6,50 @@ permalink: /snake/
 ---
 
 <style>
-    body {}
+    body {
+        text-align: center;
+    }
+
     .wrap {
         margin-left: auto;
         margin-right: auto;
     }
+
     canvas {
         border-style: solid;
-        border-width: 50px;
+        border-width: 10px;
         border-color: rgb(30, 121, 44);
         display: block;
         margin: 0 auto;
     }
-    canvas:focus {
-        outline: none;
-    }
+
     #gameover p, #setting p, #menu p {
         font-size: 20px;
     }
+
     #gameover a, #setting a, #menu a {
         font-size: 30px;
         display: block;
     }
+
     #gameover a:hover, #setting a:hover, #menu a:hover {
         cursor: pointer;
     }
-    #gameover a:hover::before, #setting a:hover::before, #menu a:hover::before {
-        content: ">";
-        margin-right: 10px;
-    }
+
     #menu {
         display: block;
     }
+
     #gameover {
         display: none;
     }
+
     #setting {
         display: none;
     }
-    #setting input {
-        display: none;
-    }
-    #setting label {
-        cursor: pointer;
-    }
-    #setting input:checked + label {
-        background-color: #FFF;
-        color: #000000
-    }
 </style>
 
-<h2>Snake</h2>
+<h2>Snake Game</h2>
 <div class="container">
     <header class="pb-3 mb-4 border-bottom border-primary text-dark">
         <p class="fs-4">Score: <span id="score_value">0</span></p>
@@ -100,11 +93,11 @@ permalink: /snake/
     const canvas = document.getElementById("snake");
     const ctx = canvas.getContext("2d");
     const SCREEN_SNAKE = 0;
-    const screen_snake = document.getElementById("snake");
+    const SCREEN_MENU = -1, SCREEN_GAME_OVER = 1, SCREEN_SETTING = 2;
+    const BLOCK = 20;
     const ele_score = document.getElementById("score_value");
     const speed_setting = document.getElementsByName("speed");
     const wall_setting = document.getElementsByName("wall");
-    const SCREEN_MENU = -1, SCREEN_GAME_OVER = 1, SCREEN_SETTING = 2;
     const screen_menu = document.getElementById("menu");
     const screen_game_over = document.getElementById("gameover");
     const screen_setting = document.getElementById("setting");
@@ -114,7 +107,6 @@ permalink: /snake/
     const button_setting_menu = document.getElementById("setting_menu");
     const button_setting_menu1 = document.getElementById("setting_menu1");
 
-    const BLOCK = 50;
     let SCREEN = SCREEN_MENU;
     let snake;
     let snake_dir;
@@ -145,6 +137,14 @@ permalink: /snake/
             x: Math.floor(Math.random() * (canvas.width / BLOCK)),
             y: Math.floor(Math.random() * (canvas.height / BLOCK))
         };
+        snake_speed = 150; // Default speed
+        if (speed_setting[0].checked) {
+            snake_speed = 200; // Slow
+        } else if (speed_setting[1].checked) {
+            snake_speed = 150; // Normal
+        } else if (speed_setting[2].checked) {
+            snake_speed = 100; // Fast
+        }
         if (wall_setting[0].checked) {
             wall = true;
         } else {
