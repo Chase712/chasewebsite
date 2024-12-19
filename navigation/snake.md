@@ -114,12 +114,12 @@ permalink: /snake/
     let score;
     let wall;
 
-    // Load a different baseball image for the food
+    // Load the food image (baseball)
     const foodImage = new Image();
     foodImage.src = "https://upload.wikimedia.org/wikipedia/commons/0/05/Baseball_-_Cropped.jpg"; // Updated baseball image
 
-    // Set snake color to lighter brown
-    const snakeColor = "#A52A2A"; // Lighter brown
+    // Set snake color to light brown
+    const snakeColor = "#D2B48C"; // Light brown
 
     // Game logic
     function initGame() {
@@ -153,23 +153,23 @@ permalink: /snake/
 
     function drawBackground() {
         ctx.fillStyle = "green";
-        ctx.fillRect(0, 0, canvas.width, canvas.height); // Draw full green background
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // Full green background
     }
 
     function drawSnake() {
-        ctx.fillStyle = snakeColor;
+        ctx.fillStyle = snakeColor; // Set snake color to light brown
         for (let i = 0; i < snake.length; i++) {
             ctx.fillRect(snake[i].x * BLOCK, snake[i].y * BLOCK, BLOCK, BLOCK);
         }
     }
 
     function drawFood() {
-        // Ensure the food image is loaded before drawing it
+        // Ensure food image is fully loaded
         if (foodImage.complete) {
             ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image
         } else {
             foodImage.onload = () => {
-                ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image when loaded
+                ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image once loaded
             };
         }
     }
@@ -181,7 +181,7 @@ permalink: /snake/
         moveSnake(); // Move snake
         checkCollisions(); // Check for collisions
         ele_score.innerText = score; // Update score
-        setTimeout(gameLoop, snake_speed); // Continue game loop
+        setTimeout(gameLoop, snake_speed); // Game loop timing based on snake speed
     }
 
     function moveSnake() {
@@ -219,12 +219,12 @@ permalink: /snake/
     function checkCollisions() {
         let head = snake[0];
 
-        // Check for wall collisions
+        // Check wall collisions
         if (wall && (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK)) {
             endGame();
         }
 
-        // Check for self collisions
+        // Check for self-collisions
         for (let i = 1; i < snake.length; i++) {
             if (head.x === snake[i].x && head.y === snake[i].y) {
                 endGame();
@@ -239,8 +239,8 @@ permalink: /snake/
         screen_setting.style.display = "none";
     }
 
-    // Event Listeners for controls and settings
-    document.addEventListener("keydown", (e) => {
+    // Event listeners for controls
+    window.addEventListener("keydown", (e) => {
         if (e.key === "ArrowUp" && snake_dir !== "DOWN") {
             snake_next_dir = "UP";
         } else if (e.key === "ArrowDown" && snake_dir !== "UP") {
