@@ -152,6 +152,38 @@ permalink: /snake/
         ctx.fillRect(0, 0, canvas.width, canvas.height); // Full green background
     }
 
+    function drawDiamondField() {
+        // Draw the diamond field
+        const baseRadius = 5;
+        const diamondSize = 12;
+
+        // Base positions in the shape of a diamond
+        const bases = [
+            { x: canvas.width / 2, y: canvas.height / 2 - diamondSize },  // Home plate (top)
+            { x: canvas.width / 2 + diamondSize, y: canvas.height / 2 },  // First base (right)
+            { x: canvas.width / 2, y: canvas.height / 2 + diamondSize },  // Second base (bottom)
+            { x: canvas.width / 2 - diamondSize, y: canvas.height / 2 },  // Third base (left)
+        ];
+
+        // Draw the field bases
+        ctx.fillStyle = "white";
+        bases.forEach(base => {
+            ctx.beginPath();
+            ctx.arc(base.x, base.y, baseRadius, 0, 2 * Math.PI);
+            ctx.fill();
+        });
+
+        // Draw the diamond infield (green area between bases)
+        ctx.fillStyle = "darkgreen";
+        ctx.beginPath();
+        ctx.moveTo(bases[0].x, bases[0].y); // home plate
+        ctx.lineTo(bases[1].x, bases[1].y); // first base
+        ctx.lineTo(bases[2].x, bases[2].y); // second base
+        ctx.lineTo(bases[3].x, bases[3].y); // third base
+        ctx.closePath();
+        ctx.fill();
+    }
+
     function drawSnake() {
         ctx.fillStyle = snakeColor; // Set snake color to light brown
         for (let i = 0; i < snake.length; i++) {
@@ -182,67 +214,59 @@ permalink: /snake/
         ctx.stroke();
     }
 
-    function gameLoop() {
-        drawBackground(); // Draw the green background
-        drawSnake(); // Draw snake
-        drawFood(); // Draw food
-        moveSnake(); // Move snake
-        checkCollisions(); // Check for collisions
-        ele_score.innerText = score; // Update score
-        setTimeout(gameLoop, snake_speed); // Game loop timing based on snake speed
-    }
-
-    function moveSnake() {
+    function updateSnakePosition() {
         let head = { ...snake[0] };
-        switch (snake_next_dir) {
-            case "UP":
-                head.y--;
-                break;
-            case "DOWN":
-                head.y++;
-                break;
-            case "LEFT":
-                head.x--;
-                break;
-            case "RIGHT":
-                head.x++;
-                break;
-        }
 
-        snake.unshift(head);
+        if (snake_next_dir === "UP") head.y--;
+        if (snake_next_dir === "DOWN") head.y++;
+        if (snake_next_dir === "LEFT") head.x--;
+        if (snake_next_dir === "RIGHT") head.x++;
 
+        snake.unshift(head); // Add the new head
+
+        // If snake eats food, increase score and spawn new food
         if (head.x === food.x && head.y === food.y) {
             score++;
+            ele_score.innerText = score;
             food = {
                 x: Math.floor(Math.random() * (canvas.width / BLOCK)),
                 y: Math.floor(Math.random() * (canvas.height / BLOCK))
             };
         } else {
-            snake.pop();
+            snake.pop(); // Remove the last part of the snake
         }
 
-        snake_dir = snake_next_dir;
-    }
-
-    function checkCollisions() {
-        let head = snake[0];
-
-        // Check wall collisions
-        if (wall && (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK)) {
-            endGame();
+        // Wall collision check (if enabled)
+        if (wall) {
+            if (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK) {
+                gameOver();
+            }
         }
 
-        // Check for self-collisions
+        // Self-collision check
         for (let i = 1; i < snake.length; i++) {
             if (head.x === snake[i].x && head.y === snake[i].y) {
-                endGame();
+                gameOver();
             }
         }
     }
 
-    function endGame() {
-        SCREEN = 1; // Game Over screen
+    function gameOver() {
+        SCREEN = 0;
         screen_game_over.style.display = "block";
+    }
+
+    function gameLoop() {
+        if (SCREEN !== 1) return;
+
+        // Game screen logic
+        drawBackground();
+        drawDiamondField();
+        drawSnake();
+        drawFood();
+        updateSnakePosition();
+
+        setTimeout(gameLoop, snake_speed);
     }
 
     // Event listeners for controls
