@@ -1,4 +1,3 @@
-
 ---
 layout: page
 title: Snake
@@ -156,26 +155,6 @@ permalink: /snake/
         ctx.fillRect(0, 0, canvas.width, canvas.height); // Full green background
     }
 
-    function drawSimpleBases() {
-        // Simple bases as small squares at four corners (home, first, second, third base)
-        const baseSize = 5;
-        const baseColor = "white";
-
-        // Base positions in the shape of a diamond (simplified)
-        const bases = [
-            { x: canvas.width / 2 - BLOCK, y: canvas.height / 2 - BLOCK },  // Home plate (top-left)
-            { x: canvas.width / 2 + BLOCK, y: canvas.height / 2 - BLOCK },  // First base (top-right)
-            { x: canvas.width / 2 + BLOCK, y: canvas.height / 2 + BLOCK },  // Second base (bottom-right)
-            { x: canvas.width / 2 - BLOCK, y: canvas.height / 2 + BLOCK },  // Third base (bottom-left)
-        ];
-
-        // Draw the bases as small squares
-        ctx.fillStyle = baseColor;
-        bases.forEach(base => {
-            ctx.fillRect(base.x, base.y, baseSize, baseSize);
-        });
-    }
-
     function drawSnake() {
         ctx.fillStyle = snakeColor; // Set snake color to light brown
         for (let i = 0; i < snake.length; i++) {
@@ -254,40 +233,34 @@ permalink: /snake/
 
         // Game screen logic
         drawBackground();
-        drawSimpleBases(); // Draw simplified bases
         drawSnake();
         drawFood();
         updateSnakePosition();
 
-        setTimeout(gameLoop, snake_speed);
+        snake_dir = snake_next_dir; // Update snake direction
+        setTimeout(gameLoop, snake_speed); // Loop the game based on speed
     }
 
-    // Event listeners for controls
-    window.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowUp" && snake_dir !== "DOWN") {
-            snake_next_dir = "UP";
-        } else if (e.key === "ArrowDown" && snake_dir !== "UP") {
-            snake_next_dir = "DOWN";
-        } else if (e.key === "ArrowLeft" && snake_dir !== "RIGHT") {
-            snake_next_dir = "LEFT";
-        } else if (e.key === "ArrowRight" && snake_dir !== "LEFT") {
-            snake_next_dir = "RIGHT";
-        } else if (e.key === " " && SCREEN === 1) {
-            initGame(); // Start new game
-            screen_game_over.style.display = "none";
-        }
+    // Event listeners
+    document.addEventListener("keydown", (e) => {
+        if (SCREEN === 0) return; // Do nothing if game is over
+        if (e.key === "ArrowLeft" && snake_dir !== "RIGHT") snake_next_dir = "LEFT";
+        if (e.key === "ArrowUp" && snake_dir !== "DOWN") snake_next_dir = "UP";
+        if (e.key === "ArrowRight" && snake_dir !== "LEFT") snake_next_dir = "RIGHT";
+        if (e.key === "ArrowDown" && snake_dir !== "UP") snake_next_dir = "DOWN";
     });
 
-    // Game start buttons
+    // Button handlers
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
     button_new_game2.addEventListener("click", initGame);
-
     button_setting_menu.addEventListener("click", () => {
         screen_menu.style.display = "none";
         screen_setting.style.display = "block";
     });
+    button_setting_menu1.addEventListener("click", () => {
+        screen_game_over.style.display = "none";
+        screen_setting.style.display = "block";
+    });
 })();
 </script>
-
-
