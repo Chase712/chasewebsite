@@ -1,93 +1,3 @@
----
-layout: page
-title: Snake
-search_exclude: true
-permalink: /snake/
----
-
-<style>
-    body {
-        text-align: center;
-    }
-
-    .wrap {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    canvas {
-        border-style: solid;
-        border-width: 10px;
-        border-color: rgb(30, 121, 44);
-        display: block;
-        margin: 0 auto;
-    }
-
-    #gameover p, #setting p, #menu p {
-        font-size: 20px;
-    }
-
-    #gameover a, #setting a, #menu a {
-        font-size: 30px;
-        display: block;
-    }
-
-    #gameover a:hover, #setting a:hover, #menu a:hover {
-        cursor: pointer;
-    }
-
-    #menu {
-        display: block;
-    }
-
-    #gameover {
-        display: none;
-    }
-
-    #setting {
-        display: none;
-    }
-</style>
-
-<h2>Snake Game</h2>
-<div class="container">
-    <header class="pb-3 mb-4 border-bottom border-primary text-dark">
-        <p class="fs-4">Score: <span id="score_value">0</span></p>
-    </header>
-    <div class="container bg-secondary" style="text-align:center;">
-        <div id="menu" class="py-4 text-light">
-            <p>Welcome to Snake, press <span style="background-color: rgb(220,37,37); color: #000000">space</span> to begin</p>
-            <a id="new_game" class="link-alert">new game</a>
-            <a id="setting_menu" class="link-alert">settings</a>
-        </div>
-        <div id="gameover" class="py-4 text-light">
-            <p>Game Over, press <span style="background-color:rgb(220, 37, 37); color: #000000">space</span> to try again</p>
-            <a id="new_game1" class="link-alert">new game</a>
-            <a id="setting_menu1" class="link-alert">settings</a>
-        </div>
-        <canvas id="snake" class="wrap" width="400" height="400" tabindex="1"></canvas>
-        <div id="setting" class="py-4 text-light">
-            <p>Settings Screen, press <span style="background-color:rgb(220, 37, 37); color: #000000">space</span> to go back to playing</p>
-            <a id="new_game2" class="link-alert">new game</a>
-            <br>
-            <p>Speed:
-                <input id="speed1" type="radio" name="speed" value="200" checked />
-                <label for="speed1">Slow</label>
-                <input id="speed2" type="radio" name="speed" value="150" />
-                <label for="speed2">Normal</label>
-                <input id="speed3" type="radio" name="speed" value="100" />
-                <label for="speed3">Fast</label>
-            </p>
-            <p>Wall:
-                <input id="wallon" type="radio" name="wall" value="1" checked />
-                <label for="wallon">On</label>
-                <input id="walloff" type="radio" name="wall" value="0" />
-                <label for="walloff">Off</label>
-            </p>
-        </div>
-    </div>
-</div>
-
 <script>
 (function () {
     const canvas = document.getElementById("snake");
@@ -216,6 +126,11 @@ permalink: /snake/
 
     function gameLoop() {
         if (SCREEN === 1) {
+            // Update direction only when snake_dir and snake_next_dir are different
+            if (snake_dir !== snake_next_dir) {
+                snake_dir = snake_next_dir;
+            }
+
             drawBackground();
             drawSnake();
             drawFood();
