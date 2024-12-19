@@ -1,221 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #ffffff;
+        }
+
+        #instruction-page, #game-page {
+            display: none;
+            text-align: center;
+        }
+
+        #instruction-page.active, #game-page.active {
+            display: block;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: #45a049;
+        }
+
+        #game-area {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #fff;
+            box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.5);
+        }
+
+        .snake {
+            width: 20px;
+            height: 20px;
+            background-color: #32cd32;
+            position: absolute;
+            border-radius: 3px;
+            box-shadow: 0 0 5px #32cd32;
+        }
+
+        .food {
+            width: 20px;
+            height: 20px;
+            background-color: #ff4500;
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #ff4500;
+        }
+    </style>
+</head>
+<body>
+
+<div id="instruction-page" class="active">
+    <h1>Welcome to Snake Game!</h1>
+    <p>Your goal is to eat as many glowing food orbs as possible without hitting the walls or yourself.</p>
+    <p>Use the <b>W</b>, <b>A</b>, <b>S</b>, <b>D</b> keys to move the snake:</p>
+    <ul>
+        <li><b>W:</b> Move Up</li>
+        <li><b>A:</b> Move Left</li>
+        <li><b>S:</b> Move Down</li>
+        <li><b>D:</b> Move Right</li>
+    </ul>
+    <p>Press the "Start Game" button to begin!</p>
+    <button onclick="startGame()">Start Game</button>
+</div>
+
+<div id="game-page">
+    <h1>Score: <span id="score">0</span></h1>
+    <div id="game-area"></div>
+</div>
+
 <script>
-    (function () {
-        /* Attributes of Game */
-        /////////////////////////////////////////////////////////////
-        // Canvas & Context
-        const canvas = document.getElementById("snake");
-        const ctx = canvas.getContext("2d");
+    let score = 0;
+    let snake = [{ x: 200, y: 200 }];
+    let food = { x: 0, y: 0 };
+    let direction = null; // No direction initially
+    let gameInterval;
 
-        // HTML Game IDs
-        const SCREEN_SNAKE = 0;
-        const screen_snake = document.getElementById("snake");
-        const ele_score = document.getElementById("score_value");
-        const speed_setting = document.getElementsByName("speed");
-        const wall_setting = document.getElementsByName("wall");
+    const instructionPage = document.getElementById('instruction-page');
+    const gamePage = document.getElementById('game-page');
+    const scoreElement = document.getElementById('score');
+    const gameArea = document.getElementById('game-area');
 
-        // HTML Screen IDs (div)
-        const SCREEN_MENU = -1, SCREEN_GAME_OVER = 1, SCREEN_SETTING = 2;
-        const screen_menu = document.getElementById("menu");
-        const screen_game_over = document.getElementById("gameover");
-        const screen_setting = document.getElementById("setting");
+    function startGame() {
+        instructionPage.classList.remove('active');
+        gamePage.classList.add('active');
+        score = 0;
+        snake = [{ x: 200, y: 200 }];
+        direction = null; // Reset direction
+        placeFood();
+        updateScore();
+        drawGame();
+        gameInterval = setInterval(updateGame, 100);
+    }
 
-        // HTML Event IDs (a tags)
-        const button_new_game = document.getElementById("new_game");
-        const button_new_game1 = document.getElementById("new_game1");
-        const button_new_game2 = document.getElementById("new_game2");
-        const button_setting_menu = document.getElementById("setting_menu");
-        const button_setting_menu1 = document.getElementById("setting_menu1");
+    function updateScore() {
+        scoreElement.textContent = score;
+    }
 
-        // Game Control
-        const BLOCK = 10;   // size of block rendering
-        let SCREEN = SCREEN_MENU;
-        let snake;
-        let snake_dir;
-        let snake_next_dir;
-        let snake_speed;
-        let food = { x: 0, y: 0 };
-        let score;
-        let wall;
+    function drawGame() {
+        gameArea.innerHTML = '';
+        snake.forEach(segment => {
+            const snakeElement = document.createElement('div');
+            snakeElement.style.left = `${segment.x}px`;
+            snakeElement.style.top = `${segment.y}px`;
+            snakeElement.classList.add('snake');
+            gameArea.appendChild(snakeElement);
+        });
+        const foodElement = document.createElement('div');
+        foodElement.style.left = `${food.x}px`;
+        foodElement.style.top = `${food.y}px`;
+        foodElement.classList.add('food');
+        gameArea.appendChild(foodElement);
+    }
 
-        // Food Image Setup
-        const foodImage = new Image();
-        foodImage.src = "/chasewebsite/images/360_F_197537431_bL6Gy5AbpxZyVNCzL421DJ1MoHiaq7YH.jpg";
-        let foodImageLoaded = false;
+    function updateGame() {
+        if (!direction) return; // Skip update if no direction
 
-        foodImage.onload = function () {
-            foodImageLoaded = true;
-            console.log("Food image loaded successfully.");
-        };
+        const head = { x: snake[0].x + direction.x * 20, y: snake[0].y + direction.y * 20 };
+        if (head.x < 0 || head.y < 0 || head.x >= 400 || head.y >= 400 || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+            endGame();
+            return;
+        }
+        snake.unshift(head);
+        if (head.x === food.x && head.y === food.y) {
+            score++;
+            updateScore();
+            placeFood();
+        } else {
+            snake.pop();
+        }
+        drawGame();
+    }
 
-        foodImage.onerror = function () {
-            console.error("Failed to load food image. Falling back to rectangle rendering.");
-        };
+    function placeFood() {
+        food.x = Math.floor(Math.random() * 20) * 20;
+        food.y = Math.floor(Math.random() * 20) * 20;
+        if (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
+            placeFood();
+        }
+    }
 
-        /* Display Control */
-        /////////////////////////////////////////////////////////////
-        let showScreen = function (screen_opt) {
-            SCREEN = screen_opt;
-            switch (screen_opt) {
-                case SCREEN_SNAKE:
-                    screen_snake.style.display = "block";
-                    screen_menu.style.display = "none";
-                    screen_setting.style.display = "none";
-                    screen_game_over.style.display = "none";
-                    break;
-                case SCREEN_GAME_OVER:
-                    screen_snake.style.display = "block";
-                    screen_menu.style.display = "none";
-                    screen_setting.style.display = "none";
-                    screen_game_over.style.display = "block";
-                    break;
-                case SCREEN_SETTING:
-                    screen_snake.style.display = "none";
-                    screen_menu.style.display = "none";
-                    screen_setting.style.display = "block";
-                    screen_game_over.style.display = "none";
-                    break;
-            }
-        };
+    function endGame() {
+        clearInterval(gameInterval);
+        alert(`Game Over! Your final score is: ${score}`);
+        gamePage.classList.remove('active');
+        instructionPage.classList.add('active');
+    }
 
-        /* Dot for Food or Snake Part */
-        /////////////////////////////////////////////////////////////
-        let activeDot = function (x, y, isFood = false) {
-            if (isFood && foodImageLoaded) {
-                // Draw food as an image
-                ctx.drawImage(foodImage, x * BLOCK, y * BLOCK, BLOCK, BLOCK);
-            } else if (isFood) {
-                // Fallback to red rectangle for food
-                ctx.fillStyle = "red";
-                ctx.fillRect(x * BLOCK, y * BLOCK, BLOCK, BLOCK);
-            } else {
-                // Draw snake as a brown rectangle
-                ctx.fillStyle = "#964B00";
-                ctx.fillRect(x * BLOCK, y * BLOCK, BLOCK, BLOCK);
-            }
-        };
-
-        /* Random Food Placement */
-        /////////////////////////////////////////////////////////////
-        let addFood = function () {
-            food.x = Math.floor(Math.random() * ((canvas.width / BLOCK) - 1));
-            food.y = Math.floor(Math.random() * ((canvas.height / BLOCK) - 1));
-            for (let i = 0; i < snake.length; i++) {
-                if (checkBlock(food.x, food.y, snake[i].x, snake[i].y)) {
-                    addFood();
-                }
-            }
-        };
-
-        /* Collision Detection */
-        /////////////////////////////////////////////////////////////
-        let checkBlock = function (x, y, _x, _y) {
-            return (x === _x && y === _y);
-        };
-
-        /* Update Score */
-        /////////////////////////////////////////////////////////////
-        let altScore = function (score_val) {
-            ele_score.innerHTML = String(score_val);
-        };
-
-        /* Main Loop */
-        /////////////////////////////////////////////////////////////
-        let mainLoop = function () {
-            let _x = snake[0].x;
-            let _y = snake[0].y;
-            snake_dir = snake_next_dir;
-
-            // Direction 0 - Up, 1 - Right, 2 - Down, 3 - Left
-            switch (snake_dir) {
-                case 0: _y--; break;
-                case 1: _x++; break;
-                case 2: _y++; break;
-                case 3: _x--; break;
-            }
-
-            snake.pop(); // Remove tail
-            snake.unshift({ x: _x, y: _y }); // Add new head
-
-            // Wall Collision Check
-            if (wall === 1) {
-                if (_x < 0 || _x === canvas.width / BLOCK || _y < 0 || _y === canvas.height / BLOCK) {
-                    showScreen(SCREEN_GAME_OVER);
-                    return;
-                }
-            } else {
-                // Wrap Around
-                if (_x < 0) _x += canvas.width / BLOCK;
-                if (_x >= canvas.width / BLOCK) _x -= canvas.width / BLOCK;
-                if (_y < 0) _y += canvas.height / BLOCK;
-                if (_y >= canvas.height / BLOCK) _y -= canvas.height / BLOCK;
-            }
-
-            // Self Collision
-            for (let i = 1; i < snake.length; i++) {
-                if (snake[0].x === snake[i].x && snake[0].y === snake[i].y) {
-                    showScreen(SCREEN_GAME_OVER);
-                    return;
-                }
-            }
-
-            // Food Collision
-            if (checkBlock(snake[0].x, snake[0].y, food.x, food.y)) {
-                snake.push({ x: snake[0].x, y: snake[0].y });
-                altScore(++score);
-                addFood();
-            }
-
-            // Clear Canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw Snake
-            for (let i = 0; i < snake.length; i++) {
-                activeDot(snake[i].x, snake[i].y);
-            }
-
-            // Draw Food
-            activeDot(food.x, food.y, true);
-
-            setTimeout(mainLoop, snake_speed);
-        };
-
-        /* New Game */
-        /////////////////////////////////////////////////////////////
-        let newGame = function () {
-            showScreen(SCREEN_SNAKE);
-            screen_snake.focus();
-
-            score = 0;
-            altScore(score);
-
-            snake = [{ x: 5, y: 5 }];
-            snake_dir = 1;
-            snake_next_dir = 1;
-
-            addFood();
-            mainLoop();
-        };
-
-        /* Initialization */
-        /////////////////////////////////////////////////////////////
-        window.onload = function () {
-            button_new_game.onclick = newGame;
-            button_new_game1.onclick = newGame;
-            button_new_game2.onclick = newGame;
-
-            setSnakeSpeed(100);
-            setWall(1);
-        };
-
-        /* Utility Functions */
-        /////////////////////////////////////////////////////////////
-        let setSnakeSpeed = function (speed) {
-            snake_speed = speed;
-        };
-
-        let setWall = function (wall_value) {
-            wall = wall_value;
-            screen_snake.style.borderColor = wall ? "#FFFFFF" : "#606060";
-        };
-    })();
+    document.addEventListener('keydown', e => {
+        switch (e.key) {
+            case 'w':
+            case 'W':
+                if (direction?.y !== 1) direction = { x: 0, y: -1 };
+                break;
+            case 's':
+            case 'S':
+                if (direction?.y !== -1) direction = { x: 0, y: 1 };
+                break;
+            case 'a':
+            case 'A':
+                if (direction?.x !== 1) direction = { x: -1, y: 0 };
+                break;
+            case 'd':
+            case 'D':
+                if (direction?.x !== -1) direction = { x: 1, y: 0 };
+                break;
+        }
+    });
 </script>
+
+</body>
+</html>
