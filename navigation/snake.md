@@ -1,3 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        #menu {
+            display: block;
+        }
+        #gameover, #setting {
+            display: none;
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            background-color: green; /* Ensure the background is green */
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Main Menu -->
+<div id="menu">
+    <h1>Snake Game</h1>
+    <button class="button" id="new_game">Start Game</button>
+    <button class="button" id="setting_menu">Settings</button>
+</div>
+
+<!-- Game Over Screen -->
+<div id="gameover">
+    <h2>Game Over!</h2>
+    <button class="button" id="new_game1">Restart Game</button>
+</div>
+
+<!-- Settings Screen -->
+<div id="setting">
+    <h2>Settings</h2>
+    <label><input type="radio" name="speed" value="slow"> Slow</label>
+    <label><input type="radio" name="speed" value="normal" checked> Normal</label>
+    <label><input type="radio" name="speed" value="fast"> Fast</label><br><br>
+    <label><input type="radio" name="wall" value="yes"> Walls On</label>
+    <label><input type="radio" name="wall" value="no" checked> Walls Off</label><br><br>
+    <button class="button" id="setting_menu1">Back to Menu</button>
+</div>
+
+<!-- Canvas for the Snake Game -->
+<canvas id="snake" width="600" height="400"></canvas>
+
 <script>
 (function () {
     const canvas = document.getElementById("snake");
@@ -15,7 +72,7 @@
     const button_setting_menu = document.getElementById("setting_menu");
     const button_setting_menu1 = document.getElementById("setting_menu1");
 
-    let SCREEN = -1;
+    let SCREEN = 0; // Screen starts as the menu
     let snake;
     let snake_dir;
     let snake_next_dir;
@@ -27,7 +84,7 @@
     // Set snake color to light brown
     const snakeColor = "#D2B48C"; // Light brown
 
-    // Game logic
+    // Initialize the game
     function initGame() {
         snake = [
             { x: 5, y: 5 },
@@ -57,6 +114,8 @@
         SCREEN = 1; // Set screen to playing state
         screen_menu.style.display = "none";
         screen_game_over.style.display = "none";
+        screen_setting.style.display = "none";
+        canvas.style.display = "block"; // Ensure canvas is visible
         gameLoop();
     }
 
@@ -135,7 +194,6 @@
         // If snake eats food, increase score and spawn new food
         if (head.x === food.x && head.y === food.y) {
             score++;
-            ele_score.innerText = score;
             food = {
                 x: Math.floor(Math.random() * (canvas.width / BLOCK)),
                 y: Math.floor(Math.random() * (canvas.height / BLOCK))
@@ -187,20 +245,26 @@
             snake_next_dir = "LEFT";
         } else if (e.key === "ArrowRight" && snake_dir !== "LEFT") {
             snake_next_dir = "RIGHT";
-        } else if (e.key === " " && SCREEN === 1) {
-            initGame(); // Start new game
-            screen_game_over.style.display = "none";
         }
     });
 
     // Game start buttons
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
-    button_new_game2.addEventListener("click", initGame);
 
+    // Settings menu button
     button_setting_menu.addEventListener("click", () => {
         screen_menu.style.display = "none";
         screen_setting.style.display = "block";
     });
+
+    button_setting_menu1.addEventListener("click", () => {
+        screen_setting.style.display = "none";
+        screen_menu.style.display = "block";
+    });
+
 })();
 </script>
+
+</body>
+</html>
