@@ -12,10 +12,11 @@ permalink: /snake/
         margin-right: auto;
     }
     canvas {
-        display: none;
         border-style: solid;
         border-width: 50px;
         border-color: rgb(30, 121, 44);
+        display: block;
+        margin: 0 auto;
     }
     canvas:focus {
         outline: none;
