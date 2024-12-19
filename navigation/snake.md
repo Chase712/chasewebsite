@@ -110,7 +110,7 @@ permalink: /snake/
     let snake_dir;
     let snake_next_dir;
     let snake_speed;
-    let food = { x: 0, y: 0 };
+    let food = [];
     let score;
     let wall;
 
@@ -127,10 +127,10 @@ permalink: /snake/
         snake_dir = "RIGHT";
         snake_next_dir = "RIGHT";
         score = 0;
-        food = {
-            x: Math.floor(Math.random() * (canvas.width / BLOCK)),
-            y: Math.floor(Math.random() * (canvas.height / BLOCK))
-        };
+        food = [
+            { x: Math.floor(Math.random() * (canvas.width / BLOCK)), y: Math.floor(Math.random() * (canvas.height / BLOCK)) },
+            { x: Math.floor(Math.random() * (canvas.width / BLOCK)), y: Math.floor(Math.random() * (canvas.height / BLOCK)) }
+        ];
         snake_speed = 150; // Default speed
         if (speed_setting[0].checked) {
             snake_speed = 200; // Slow
@@ -163,48 +163,12 @@ permalink: /snake/
     }
 
     function drawFood() {
-        // Draw food as a white circle (baseball)
-        ctx.fillStyle = "white";
-        ctx.beginPath();
-        ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // Draw the red laces (stitching) of the baseball
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 2;
-
-        // Left laces (curved stitching on one side of the ball)
-        ctx.beginPath();
-        ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2 - 3, Math.PI, 2 * Math.PI, false);
-        ctx.stroke();
-
-        // Right laces (curved stitching on the opposite side)
-        ctx.beginPath();
-        ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2 - 3, 0, Math.PI, true);
-        ctx.stroke();
-
-        // Draw small stitches along the curves to resemble baseball laces
-        // Left side
-        ctx.beginPath();
-        ctx.moveTo(food.x * BLOCK + BLOCK / 2 - BLOCK / 4, food.y * BLOCK + BLOCK / 2 - BLOCK / 6);
-        ctx.lineTo(food.x * BLOCK + BLOCK / 2 - BLOCK / 4, food.y * BLOCK + BLOCK / 2 - BLOCK / 4);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(food.x * BLOCK + BLOCK / 2 - BLOCK / 4, food.y * BLOCK + BLOCK / 2 + BLOCK / 6);
-        ctx.lineTo(food.x * BLOCK + BLOCK / 2 - BLOCK / 4, food.y * BLOCK + BLOCK / 2 + BLOCK / 4);
-        ctx.stroke();
-
-        // Right side
-        ctx.beginPath();
-        ctx.moveTo(food.x * BLOCK + BLOCK / 2 + BLOCK / 4, food.y * BLOCK + BLOCK / 2 - BLOCK / 6);
-        ctx.lineTo(food.x * BLOCK + BLOCK / 2 + BLOCK / 4, food.y * BLOCK + BLOCK / 2 - BLOCK / 4);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(food.x * BLOCK + BLOCK / 2 + BLOCK / 4, food.y * BLOCK + BLOCK / 2 + BLOCK / 6);
-        ctx.lineTo(food.x * BLOCK + BLOCK / 2 + BLOCK / 4, food.y * BLOCK + BLOCK / 2 + BLOCK / 4);
-        ctx.stroke();
+        food.forEach((item) => {
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(item.x * BLOCK + BLOCK / 2, item.y * BLOCK + BLOCK / 2, BLOCK / 2, 0, 2 * Math.PI);
+            ctx.fill();
+        });
     }
 
     function updateSnake() {
@@ -232,14 +196,17 @@ permalink: /snake/
 
         snake.unshift(head); // Add the new head to the snake
 
-        // Check if snake ate the food
-        if (head.x === food.x && head.y === food.y) {
-            score++;
-            ele_score.innerHTML = score;
-            food = { x: Math.floor(Math.random() * (canvas.width / BLOCK)), y: Math.floor(Math.random() * (canvas.height / BLOCK)) };
-        } else {
-            snake.pop(); // Remove the tail of the snake if it didn't eat food
+        // Check if snake ate any food
+        for (let i = 0; i < food.length; i++) {
+            if (head.x === food[i].x && head.y === food[i].y) {
+                score++;
+                ele_score.innerHTML = score;
+                food[i] = { x: Math.floor(Math.random() * (canvas.width / BLOCK)), y: Math.floor(Math.random() * (canvas.height / BLOCK)) };
+            }
         }
+
+        // If no food eaten, remove the tail of the snake
+        snake.pop();
     }
 
     function endGame() {
