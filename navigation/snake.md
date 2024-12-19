@@ -163,104 +163,140 @@ permalink: /snake/
     }
 
     function drawFood() {
-        // Draw food as a white circle with red stitches
+        // Draw food as a white circle (baseball)
         ctx.fillStyle = "white";
         ctx.beginPath();
         ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2, 0, 2 * Math.PI);
         ctx.fill();
         
-        // Draw the red stitches (lines) of the baseball
+        // Draw the red laces (stitching) of the baseball
         ctx.strokeStyle = "red";
         ctx.lineWidth = 2;
-        
-        // Drawing two lines crossing to simulate the stitches of a baseball
+
+        // Left laces (curved stitching on one side of the ball)
         ctx.beginPath();
-        ctx.moveTo(food.x * BLOCK + BLOCK / 4, food.y * BLOCK + BLOCK / 2);
-        ctx.lineTo(food.x * BLOCK + 3 * BLOCK / 4, food.y * BLOCK + BLOCK / 2);
+        ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2 - 3, Math.PI, 2 * Math.PI, false);
         ctx.stroke();
-        
+
+        // Right laces (curved stitching on the opposite side)
         ctx.beginPath();
-        ctx.moveTo(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 4);
-        ctx.lineTo(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + 3 * BLOCK / 4);
+        ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2 - 3, 0, Math.PI, true);
+        ctx.stroke();
+
+        // Draw small stitches along the curves to resemble baseball laces
+        // Left side
+        ctx.beginPath();
+        ctx.moveTo(food.x * BLOCK + BLOCK / 2 - BLOCK / 4, food.y * BLOCK + BLOCK / 2 - BLOCK / 6);
+        ctx.lineTo(food.x * BLOCK + BLOCK / 2 - BLOCK / 4, food.y * BLOCK + BLOCK / 2 - BLOCK / 4);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(food.x * BLOCK + BLOCK / 2 - BLOCK / 4, food.y * BLOCK + BLOCK / 2 + BLOCK / 6);
+        ctx.lineTo(food.x * BLOCK + BLOCK / 2 - BLOCK / 4, food.y * BLOCK + BLOCK / 2 + BLOCK / 4);
+        ctx.stroke();
+
+        // Right side
+        ctx.beginPath();
+        ctx.moveTo(food.x * BLOCK + BLOCK / 2 + BLOCK / 4, food.y * BLOCK + BLOCK / 2 - BLOCK / 6);
+        ctx.lineTo(food.x * BLOCK + BLOCK / 2 + BLOCK / 4, food.y * BLOCK + BLOCK / 2 - BLOCK / 4);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(food.x * BLOCK + BLOCK / 2 + BLOCK / 4, food.y * BLOCK + BLOCK / 2 + BLOCK / 6);
+        ctx.lineTo(food.x * BLOCK + BLOCK / 2 + BLOCK / 4, food.y * BLOCK + BLOCK / 2 + BLOCK / 4);
         ctx.stroke();
     }
 
-    function updateSnakePosition() {
-        let head = { ...snake[0] };
+    function updateSnake() {
+        const head = { ...snake[0] };
 
-        // Update head position based on direction
-        if (snake_next_dir === "UP") head.y--;
-        if (snake_next_dir === "DOWN") head.y++;
-        if (snake_next_dir === "LEFT") head.x--;
-        if (snake_next_dir === "RIGHT") head.x++;
+        // Update snake head direction
+        if (snake_dir === "UP") head.y--;
+        else if (snake_dir === "DOWN") head.y++;
+        else if (snake_dir === "LEFT") head.x--;
+        else if (snake_dir === "RIGHT") head.x++;
 
-        snake.unshift(head); // Add the new head
+        // Check for wall collisions
+        if (wall && (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK)) {
+            endGame();
+            return;
+        }
 
-        // If snake eats food, increase score and spawn new food
+        // Check for self-collision
+        for (let i = 0; i < snake.length; i++) {
+            if (head.x === snake[i].x && head.y === snake[i].y) {
+                endGame();
+                return;
+            }
+        }
+
+        snake.unshift(head); // Add the new head to the snake
+
+        // Check if snake ate the food
         if (head.x === food.x && head.y === food.y) {
             score++;
-            ele_score.innerText = score;
-            food = {
-                x: Math.floor(Math.random() * (canvas.width / BLOCK)),
-                y: Math.floor(Math.random() * (canvas.height / BLOCK))
-            };
+            ele_score.innerHTML = score;
+            food = { x: Math.floor(Math.random() * (canvas.width / BLOCK)), y: Math.floor(Math.random() * (canvas.height / BLOCK)) };
         } else {
-            snake.pop(); // Remove the last part of the snake
-        }
-
-        // Wall collision check (if enabled)
-        if (wall) {
-            if (head.x < 0 || head.x >= canvas.width / BLOCK || head.y < 0 || head.y >= canvas.height / BLOCK) {
-                gameOver();
-            }
-        }
-
-        // Self-collision check
-        for (let i = 1; i < snake.length; i++) {
-            if (head.x === snake[i].x && head.y === snake[i].y) {
-                gameOver();
-            }
+            snake.pop(); // Remove the tail of the snake if it didn't eat food
         }
     }
 
-    function gameOver() {
-        SCREEN = 0;
+    function endGame() {
+        SCREEN = 0; // Game over state
         screen_game_over.style.display = "block";
     }
 
     function gameLoop() {
-        if (SCREEN !== 1) return;
-
-        // Game screen logic
-        drawBackground();
-        drawSnake();
-        drawFood();
-        updateSnakePosition();
-
-        snake_dir = snake_next_dir; // Update snake direction
-        setTimeout(gameLoop, snake_speed); // Loop the game based on speed
+        if (SCREEN === 1) {
+            drawBackground();
+            drawSnake();
+            drawFood();
+            updateSnake();
+            setTimeout(gameLoop, snake_speed); // Repeat the game loop based on the speed setting
+        }
     }
 
-    // Event listeners
-    document.addEventListener("keydown", (e) => {
-        if (SCREEN === 0) return; // Do nothing if game is over
-        if (e.key === "ArrowLeft" && snake_dir !== "RIGHT") snake_next_dir = "LEFT";
-        if (e.key === "ArrowUp" && snake_dir !== "DOWN") snake_next_dir = "UP";
-        if (e.key === "ArrowRight" && snake_dir !== "LEFT") snake_next_dir = "RIGHT";
-        if (e.key === "ArrowDown" && snake_dir !== "UP") snake_next_dir = "DOWN";
+    function changeDirection(event) {
+        if (event.keyCode === 37 && snake_dir !== "RIGHT") {
+            snake_next_dir = "LEFT";
+        } else if (event.keyCode === 38 && snake_dir !== "DOWN") {
+            snake_next_dir = "UP";
+        } else if (event.keyCode === 39 && snake_dir !== "LEFT") {
+            snake_next_dir = "RIGHT";
+        } else if (event.keyCode === 40 && snake_dir !== "UP") {
+            snake_next_dir = "DOWN";
+        }
+    }
+
+    // Handling user input and transitions
+    document.addEventListener("keydown", function (e) {
+        if (SCREEN === 1) {
+            changeDirection(e);
+        } else if (e.keyCode === 32) {
+            if (SCREEN === -1) {
+                initGame();
+            } else if (SCREEN === 0) {
+                initGame();
+            }
+        }
     });
 
-    // Button handlers
+    // Start a new game when 'New Game' button is clicked
     button_new_game.addEventListener("click", initGame);
     button_new_game1.addEventListener("click", initGame);
     button_new_game2.addEventListener("click", initGame);
-    button_setting_menu.addEventListener("click", () => {
-        screen_menu.style.display = "none";
+    button_setting_menu.addEventListener("click", function () {
+        SCREEN = 2;
         screen_setting.style.display = "block";
     });
-    button_setting_menu1.addEventListener("click", () => {
-        screen_game_over.style.display = "none";
+
+    button_setting_menu1.addEventListener("click", function () {
+        SCREEN = 2;
         screen_setting.style.display = "block";
     });
+
+    // Set initial menu
+    screen_menu.style.display = "block";
 })();
 </script>
