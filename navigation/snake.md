@@ -114,10 +114,6 @@ permalink: /snake/
     let score;
     let wall;
 
-    // Load the food image (baseball)
-    const foodImage = new Image();
-    foodImage.src = "https://upload.wikimedia.org/wikipedia/commons/0/05/Baseball_-_Cropped.jpg"; // Updated baseball image
-
     // Set snake color to light brown
     const snakeColor = "#D2B48C"; // Light brown
 
@@ -164,14 +160,26 @@ permalink: /snake/
     }
 
     function drawFood() {
-        // Ensure food image is fully loaded
-        if (foodImage.complete) {
-            ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image
-        } else {
-            foodImage.onload = () => {
-                ctx.drawImage(foodImage, food.x * BLOCK, food.y * BLOCK, BLOCK, BLOCK); // Draw food image once loaded
-            };
-        }
+        // Draw food as a white circle with red stitches
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 2, BLOCK / 2, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Draw the red stitches (lines) of the baseball
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        
+        // Drawing two lines crossing to simulate the stitches of a baseball
+        ctx.beginPath();
+        ctx.moveTo(food.x * BLOCK + BLOCK / 4, food.y * BLOCK + BLOCK / 2);
+        ctx.lineTo(food.x * BLOCK + 3 * BLOCK / 4, food.y * BLOCK + BLOCK / 2);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + BLOCK / 4);
+        ctx.lineTo(food.x * BLOCK + BLOCK / 2, food.y * BLOCK + 3 * BLOCK / 4);
+        ctx.stroke();
     }
 
     function gameLoop() {
@@ -235,8 +243,6 @@ permalink: /snake/
     function endGame() {
         SCREEN = 1; // Game Over screen
         screen_game_over.style.display = "block";
-        screen_menu.style.display = "none";
-        screen_setting.style.display = "none";
     }
 
     // Event listeners for controls
