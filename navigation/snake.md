@@ -152,36 +152,24 @@ permalink: /snake/
         ctx.fillRect(0, 0, canvas.width, canvas.height); // Full green background
     }
 
-    function drawDiamondField() {
-        // Draw the diamond field
-        const baseRadius = 5;
-        const diamondSize = 12;
+    function drawSimpleBases() {
+        // Simple bases as small squares at four corners (home, first, second, third base)
+        const baseSize = 5;
+        const baseColor = "white";
 
-        // Base positions in the shape of a diamond
+        // Base positions in the shape of a diamond (simplified)
         const bases = [
-            { x: canvas.width / 2, y: canvas.height / 2 - diamondSize },  // Home plate (top)
-            { x: canvas.width / 2 + diamondSize, y: canvas.height / 2 },  // First base (right)
-            { x: canvas.width / 2, y: canvas.height / 2 + diamondSize },  // Second base (bottom)
-            { x: canvas.width / 2 - diamondSize, y: canvas.height / 2 },  // Third base (left)
+            { x: canvas.width / 2 - BLOCK, y: canvas.height / 2 - BLOCK },  // Home plate (top-left)
+            { x: canvas.width / 2 + BLOCK, y: canvas.height / 2 - BLOCK },  // First base (top-right)
+            { x: canvas.width / 2 + BLOCK, y: canvas.height / 2 + BLOCK },  // Second base (bottom-right)
+            { x: canvas.width / 2 - BLOCK, y: canvas.height / 2 + BLOCK },  // Third base (bottom-left)
         ];
 
-        // Draw the field bases
-        ctx.fillStyle = "white";
+        // Draw the bases as small squares
+        ctx.fillStyle = baseColor;
         bases.forEach(base => {
-            ctx.beginPath();
-            ctx.arc(base.x, base.y, baseRadius, 0, 2 * Math.PI);
-            ctx.fill();
+            ctx.fillRect(base.x, base.y, baseSize, baseSize);
         });
-
-        // Draw the diamond infield (green area between bases)
-        ctx.fillStyle = "darkgreen";
-        ctx.beginPath();
-        ctx.moveTo(bases[0].x, bases[0].y); // home plate
-        ctx.lineTo(bases[1].x, bases[1].y); // first base
-        ctx.lineTo(bases[2].x, bases[2].y); // second base
-        ctx.lineTo(bases[3].x, bases[3].y); // third base
-        ctx.closePath();
-        ctx.fill();
     }
 
     function drawSnake() {
@@ -261,7 +249,7 @@ permalink: /snake/
 
         // Game screen logic
         drawBackground();
-        drawDiamondField();
+        drawSimpleBases(); // Draw simplified bases
         drawSnake();
         drawFood();
         updateSnakePosition();
