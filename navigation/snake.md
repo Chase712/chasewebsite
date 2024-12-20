@@ -167,14 +167,8 @@ permalink: /snake/
         // Bottom-left corner
         ctx.fillRect(0, canvas.height - cornerSize, cornerSize, cornerSize);
         
-        // Bottom-right home plate (simplified)
-        ctx.fillStyle = "white";
-        ctx.beginPath();
-        ctx.moveTo(canvas.width - cornerSize, canvas.height); // Bottom-right corner
-        ctx.lineTo(canvas.width - cornerSize - 10, canvas.height - 10); // Bottom-left part of home plate
-        ctx.lineTo(canvas.width - 10, canvas.height - 10); // Bottom-right part of home plate
-        ctx.closePath();
-        ctx.fill();
+        // Bottom-right corner
+        ctx.fillRect(canvas.width - cornerSize, canvas.height - cornerSize, cornerSize, cornerSize);
     }
 
     function drawSnake() {
