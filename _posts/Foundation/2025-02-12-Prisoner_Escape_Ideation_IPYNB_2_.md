@@ -12,18 +12,18 @@ Jack and I decided on our level to be a prison escape. We want this level to be 
 There will be a multiple NPCs in our games, some that will be more stuborn than others.
 
 ## Cop
-<img src="  width='200"/>
+<img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.09 PM.png width='200"/>
 
 ## Prisoner
-<img src="/Users/chasesikute/nighthawk/chasewebsite/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.14 PM.png width='200"/>
+<img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.14 PM.png width='200"/>
 
 ## MC
-<img src"/Users/chasesikute/nighthawk/chasewebsite/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.03 PM.png width='200"/>
+<img src"/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.03 PM.png width='200"/>
 
 
 # Background
 We decided upon this background Below. This background will allow us to have the player interact with npcs in the jail cells. 
-<img src="/Users/chasesikute/nighthawk/chasewebsite/assets/js/adventureGame/Prison escape backround.jpeg" width='200"/>
+<img src="/assets/js/adventureGame/Prison escape backround.jpeg" width='200"/>
 # Other possible ideas
 
 
