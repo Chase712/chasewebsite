@@ -12,22 +12,22 @@ Jack and I decided on our level to be a prison escape. We want this level to be 
 There will be a multiple NPCs in our games, some that will be more stuborn than others.
 
 ## Gaurd
-![NPC](https://github.com/user-attachments/assets/d9df8ab1-30f0-42d6-8b95-09ee86cd79d9) width="300">
+<img src="https://github.com/user-attachments/assets/d9df8ab1-30f0-42d6-8b95-09ee86cd79d9" width="300">
 
 ## Prisoner
-![Prisoner](https://github.com/user-attachments/assets/46515b57-d2d0-47c2-8adf-131456e3e4dd) width="300">
+<img src="https://github.com/user-attachments/assets/46515b57-d2d0-47c2-8adf-131456e3e4dd" width="300">
 
 ## MC
-![MC](https://github.com/user-attachments/assets/b1faceb2-d59e-470a-be00-f805d015eadb) width="300">
+<img src="https://github.com/user-attachments/assets/b1faceb2-d59e-470a-be00-f805d015eadb" width="300">
 
 
 # Background
 We decided upon this background Below. This background will allow us to have the player interact with npcs in the jail cells. 
-![Background](https://github.com/user-attachments/assets/0c88065f-867b-4106-8221-2db7e7e81c94) width="300">
+
+![Background](https://github.com/user-attachments/assets/0c88065f-867b-4106-8221-2db7e7e81c94)
+
 # Other possible ideas
-
-
-We may want to implement a timer or countdown to add more pressure and make the game more intertaning. 
+We may want to implement a timer or countdown to add more pressure and make the game more entertaning. 
 
 
 
@@ -35,5 +35,5 @@ We may want to implement a timer or countdown to add more pressure and make the 
 
 
 # Ideations
-<img src="/assets/js/adventureGame/Screenshot.png width='200"/>
+<img width="300" alt="Ideation" src="https://github.com/user-attachments/assets/774848d5-b209-49d1-b60e-8c1bf6103cfa" />
 We plan on making a collison border around the npc jail inmates. We need to set the border around the prison cells so the charters do not run off the maps.
