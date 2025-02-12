@@ -11,28 +11,19 @@ Jack and I decided on our level to be a prison escape. We want this level to be 
 # NPCS
 There will be a multiple NPCs in our games, some that will be more stuborn than others.
 
-![Cop](/assets/js/adventureGame/Screenshot%202025-02-11%20at%2012.25.09%20PM.png)
+## Gaurd
+![NPC](https://github.com/user-attachments/assets/d9df8ab1-30f0-42d6-8b95-09ee86cd79d9) width="300">
 
 ## Prisoner
-<img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.14 PM.png width='200"/>
+![Prisoner](https://github.com/user-attachments/assets/46515b57-d2d0-47c2-8adf-131456e3e4dd) width="300">
 
 ## MC
-<img src"/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.03 PM.png width='200"/>
+![MC](https://github.com/user-attachments/assets/b1faceb2-d59e-470a-be00-f805d015eadb) width="300">
 
-
-
-```python
-<img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.09 PM.png" width="200">
-
-<img src="/Users/chasesikute/nighthawk/chasewebsite/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.14 PM.png" width="200">
-
-<img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.03 PM.png" width="200">
-
-```
 
 # Background
 We decided upon this background Below. This background will allow us to have the player interact with npcs in the jail cells. 
-<img src="/assets/js/adventureGame/Prison escape backround.jpeg" width='200"/>
+![Background](https://github.com/user-attachments/assets/0c88065f-867b-4106-8221-2db7e7e81c94) width="300">
 # Other possible ideas
 
 
