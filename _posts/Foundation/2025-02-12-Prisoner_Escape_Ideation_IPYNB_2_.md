@@ -23,7 +23,9 @@ There will be a multiple NPCs in our games, some that will be more stuborn than 
 
 ```python
 <img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.09 PM.png" width="200">
-<img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.14 PM.png" width="200">
+
+<img src="/Users/chasesikute/nighthawk/chasewebsite/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.14 PM.png" width="200">
+
 <img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.03 PM.png" width="200">
 
 ```
