@@ -11,8 +11,7 @@ Jack and I decided on our level to be a prison escape. We want this level to be 
 # NPCS
 There will be a multiple NPCs in our games, some that will be more stuborn than others.
 
-## Cop
-<img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.09 PM.png width='200"/>
+![Cop](/assets/js/adventureGame/Screenshot%202025-02-11%20at%2012.25.09%20PM.png)
 
 ## Prisoner
 <img src="/assets/js/adventureGame/Screenshot 2025-02-11 at 12.25.14 PM.png width='200"/>
