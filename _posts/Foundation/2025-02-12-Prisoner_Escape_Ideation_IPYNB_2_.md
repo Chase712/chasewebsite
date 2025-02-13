@@ -39,5 +39,5 @@ We may want to implement a timer or countdown to add more pressure and make the 
 
 
 # Ideations
-<img width="300" alt="Ideation" src="https://github.com/user-attachments/assets/774848d5-b209-49d1-b60e-8c1bf6103cfa" />
+<img width="500" alt="Ideation" src="https://github.com/user-attachments/assets/774848d5-b209-49d1-b60e-8c1bf6103cfa" />
 We plan on making a collison border around the npc jail inmates. We need to set the border around the prison cells so the charters do not run off the maps.
