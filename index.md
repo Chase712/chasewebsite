@@ -52,5 +52,4 @@ Prior to CSSE I had absolutely no knowledge on coding, github, slack, and all th
 
 
 
-
-/Users/chasesikute/nighthawk/chasewebsite/_notebooks/Foundation/IMG_0211.jpeg
+<img src="images/NTMIM.jpeg" alt=ntm>
